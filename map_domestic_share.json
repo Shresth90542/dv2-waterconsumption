@@ -31,7 +31,7 @@
       "lookup": "JoinName",
       "from": {
         "data": {
-          "url": "https://gist.githubusercontent.com/heiswayi/8a9b39dcf749c31a/raw/b2b83685f5205aee7c35f0b543201907660fac55e/malaysia.geojson",
+          "url": "https://gist.github.com/heiswayi/81a169ab39dcf749c31a.js",
           "format": {"type": "json"}
         },
         "key": "properties.name",
