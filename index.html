@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Malaysia Water Production (2000–2019)</title>
+  <title>Malaysia Water: Production & Consumption</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Vega / Vega-Lite / Embed -->
@@ -13,49 +13,64 @@
   <style>
     :root { --maxw: 1100px; }
     body { margin: 24px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    h1 { margin: 0 0 8px; }
+    h1 { margin: 0 0 6px; }
+    h2 { margin: 32px 0 8px; }
     .wrap { max-width: var(--maxw); }
-    .chart { margin: 20px 0 36px; }
+    .chart { margin: 16px 0 28px; }
     .note { color: #666; font-size: 0.95rem; }
+    .two-col { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    @media (min-width: 960px) { .two-col { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Malaysia Water Production (2000–2019)</h1>
+    <h1>Malaysia Water: Production & Consumption by State</h1>
     <p class="note">
-      Data: <code>water_production_2000_2019.csv</code> (production, MLD) • Map: geoBoundaries ADM1 (states)
+      Production: <code>water_production_2000_2019.csv</code> •
+      Consumption: <code>water_consumption.csv</code> (sectoral) •
+      Map: geoBoundaries ADM1 (states)
     </p>
 
-    <div id="vis" class="chart"></div>
+    <h2>1) Map — Water Production by State</h2>
+    <div id="map" class="chart"></div>
+
+    <div class="two-col">
+      <div>
+        <h2>2) Stacked Bars — Sectoral Water Consumption by State</h2>
+        <div id="bars" class="chart"></div>
+      </div>
+      <div>
+        <h2>3) Scatter — Production vs Total Consumption (same year)</h2>
+        <div id="scatter" class="chart"></div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Using a stable, known-good GeoJSON for Malaysia states (ADM1)
-    // If you want to revert to your local malaysia-states.json later, we can—once we know its property names.
+    // Stable, known-good Malaysia ADM1 (state) GeoJSON
     const MALAYSIA_GEOJSON =
       "https://raw.githubusercontent.com/wmgeolab/geoBoundaries/main/releaseData/gbOpen/MYS/ADM1/geoBoundaries-MYS-ADM1.geojson";
 
-    const spec = {
+    const PROD_CSV =
+      "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv";
+
+    const CONS_CSV =
+      "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv";
+
+    // -------------------------
+    // 1) MAP: PRODUCTION BY STATE
+    // -------------------------
+    const mapSpec = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
       "width": 950,
       "height": 560,
       "projection": {"type": "mercator"},
-
       "params": [
-        {
-          "name": "year",
-          "value": 2019,
-          "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}
-        }
+        {"name": "yrMap", "value": 2019, "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}}
       ],
-
-      "data": {
-        "url": MALAYSIA_GEOJSON,
-        "format": {"type": "geojson"}
-      },
-
+      "data": { "url": MALAYSIA_GEOJSON, "format": {"type": "geojson"} },
       "transform": [
-        // geoBoundaries uses `properties.shapeName` (fallbacks included just in case)
+        // geoBoundaries uses properties.shapeName for the English state name
         {
           "calculate":
             "isDefined(datum.properties) && isDefined(datum.properties.shapeName) ? datum.properties.shapeName : " +
@@ -63,19 +78,20 @@
           "as": "geo_name"
         },
 
-        // Map geo names -> CSV names where they differ (Penang/Melaka/W.P. variants).
+        // Map geo names -> the exact strings used in your PRODUCTION CSV
         {
           "lookup": "geo_name",
           "from": {
             "data": {
               "values": [
+                // Only where names differ between map and CSV
                 {"geo":"Penang", "csv":"Pulau Pinang"},
                 {"geo":"Malacca", "csv":"Melaka"},
                 {"geo":"Kuala Lumpur", "csv":"W.P. Kuala Lumpur"},
-                {"geo":"Labuan", "csv":"W.P. Labuan"},
+                {"geo":"Labuan", "csv":"W.P.Labuan"},
                 {"geo":"Putrajaya", "csv":"W.P. Putrajaya"},
                 {"geo":"Wilayah Persekutuan Kuala Lumpur", "csv":"W.P. Kuala Lumpur"},
-                {"geo":"Wilayah Persekutuan Labuan", "csv":"W.P. Labuan"},
+                {"geo":"Wilayah Persekutuan Labuan", "csv":"W.P.Labuan"},
                 {"geo":"Wilayah Persekutuan Putrajaya", "csv":"W.P. Putrajaya"}
               ]
             },
@@ -84,32 +100,21 @@
           },
           "as": "mapped_csv_name"
         },
+        {"calculate": "isValid(datum.mapped_csv_name) ? datum.mapped_csv_name : datum.geo_name", "as": "state_key"},
 
-        // Use the mapped name if present; otherwise use original
-        {
-          "calculate": "isValid(datum.mapped_csv_name) ? datum.mapped_csv_name : datum.geo_name",
-          "as": "state_key"
-        },
-
-        // Join to your production CSV
+        // Join with production CSV (note: column is "Value (Million litres per day)" in your paste but
+        // in the file it's usually exported as "Value". We keep "Value" to match common export.)
         {
           "lookup": "state_key",
           "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv",
-              "format": {"type": "csv"}
-            },
+            "data": { "url": PROD_CSV, "format": {"type": "csv"} },
             "key": "State",
             "fields": ["State","Year","Value"]
           }
         },
-
-        // Filter by the selected year
-        {"filter": "datum.Year == year"}
+        {"filter": "datum.Year == yrMap"}
       ],
-
       "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.7},
-
       "encoding": {
         "color": {
           "field": "Value",
@@ -125,7 +130,100 @@
       }
     };
 
-    vegaEmbed('#vis', spec, { actions: false });
+    // -------------------------
+    // 2) STACKED BARS: CONSUMPTION BY SECTOR
+    // -------------------------
+    const barsSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 520,
+      "height": 520,
+      "data": { "url": CONS_CSV, "format": { "type": "csv", "parse": { "date": "utc:%d/%m/%Y" } } },
+      "params": [
+        {"name": "yrBars", "value": 2019, "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}}
+      ],
+      "transform": [
+        {"calculate": "year(datum.date)", "as": "Year"},
+        {"filter": "datum.Year == yrBars"},
+        // Standardise sector labels just in case
+        {"calculate": "lower(datum.sector)", "as": "sector_lc"},
+        {
+          "calculate":
+            "datum.sector_lc == 'nondomestic' ? 'Non-domestic' : (datum.sector_lc == 'domestic' ? 'Domestic' : datum.sector)",
+          "as": "sector_clean"
+        },
+        // Sum per state-sector (in case multiple rows per state/sector/day exist)
+        {"aggregate": [{"op":"sum", "field":"value", "as":"amount"}], "groupby": ["state","sector_clean","Year"]},
+        // Sort states by total consumption descending
+        {"joinaggregate": [{"op":"sum", "field":"amount", "as":"total_state"}], "groupby": ["state"]}
+      ],
+      "mark": {"type": "bar"},
+      "encoding": {
+        "y": {"field": "state", "type": "nominal", "sort": {"field": "total_state", "order": "descending"}, "title": "State"},
+        "x": {"aggregate": "sum", "field": "amount", "type": "quantitative", "title": "Consumption (MLD)"},
+        "color": {"field": "sector_clean", "type": "nominal", "title": "Sector"},
+        "tooltip": [
+          {"field":"state","type":"nominal","title":"State"},
+          {"field":"sector_clean","type":"nominal","title":"Sector"},
+          {"aggregate":"sum","field":"amount","type":"quantitative","title":"Sector consumption (MLD)"},
+          {"field":"Year","type":"ordinal","title":"Year"}
+        ]
+      }
+    };
+
+    // -------------------------
+    // 3) SCATTER: PRODUCTION VS TOTAL CONSUMPTION
+    // -------------------------
+    const scatterSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 520,
+      "height": 520,
+      "data": { "url": CONS_CSV, "format": { "type": "csv", "parse": { "date": "utc:%d/%m/%Y" } } },
+      "params": [
+        {"name": "yrSc", "value": 2019, "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}}
+      ],
+      "transform": [
+        {"calculate": "year(datum.date)", "as": "Year"},
+        {"filter": "datum.Year == yrSc"},
+        // total consumption per state = sum over sectors
+        {"aggregate": [{"op":"sum","field":"value","as":"total_cons"}], "groupby": ["state","Year"]},
+
+        // Normalise state → production CSV key (for join)
+        {
+          "calculate":
+            "datum.state == 'W.P. Labuan' ? 'W.P.Labuan' : " +
+            "(datum.state == 'Penang' ? 'Pulau Pinang' : " +
+            "(datum.state == 'Malacca' ? 'Melaka' : datum.state))",
+          "as": "state_for_prod"
+        },
+
+        // Lookup production for same year
+        {
+          "lookup": "state_for_prod",
+          "from": {
+            "data": { "url": PROD_CSV, "format": {"type": "csv"} },
+            "key": "State",
+            "fields": ["State","Year","Value"]
+          }
+        },
+        {"filter": "datum.Year == yrSc"}
+      ],
+      "mark": {"type": "point"},
+      "encoding": {
+        "x": {"field": "Value", "type": "quantitative", "title": "Production (MLD)"},
+        "y": {"field": "total_cons", "type": "quantitative", "title": "Total consumption (MLD)"},
+        "tooltip": [
+          {"field":"state","type":"nominal","title":"State"},
+          {"field":"Value","type":"quantitative","title":"Production (MLD)"},
+          {"field":"total_cons","type":"quantitative","title":"Total consumption (MLD)"},
+          {"field":"Year","type":"ordinal","title":"Year"}
+        ]
+      }
+    };
+
+    // Render all three charts
+    vegaEmbed('#map', mapSpec, {actions:false});
+    vegaEmbed('#bars', barsSpec, {actions:false});
+    vegaEmbed('#scatter', scatterSpec, {actions:false});
   </script>
 </body>
 </html>
