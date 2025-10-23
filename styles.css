@@ -1,0 +1,145 @@
+/* ===========================
+   Malaysia Water Dashboard UI
+   =========================== */
+
+/* ---- Design tokens ---- */
+:root{
+  --bg: #f7f8fb;
+  --card: #ffffff;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --accent-2: #0ea5e9;
+  --border: #e5e7eb;
+  --shadow: 0 1px 3px rgba(15, 23, 42, .06), 0 10px 20px rgba(15, 23, 42, .04);
+
+  --radius: 14px;
+  --wrap: 1200px;
+
+  --h1: clamp(28px, 3vw, 34px);
+  --h2: clamp(20px, 2.2vw, 24px);
+  --h3: clamp(16px, 1.8vw, 18px);
+  --text: clamp(14px, 1.4vw, 16px);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+
+/* ---- Page ---- */
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.wrap{
+  max-width: var(--wrap);
+  margin: 32px auto 72px;
+  padding: 0 20px;
+}
+
+/* ---- Header ---- */
+.page-header{
+  display:flex; align-items:flex-end; gap:18px; flex-wrap:wrap;
+  margin-bottom: 10px;
+}
+h1{
+  margin:0;
+  font-size: var(--h1);
+  letter-spacing: -0.3px;
+}
+.badge{
+  padding: 4px 10px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  color:#fff; border-radius: 999px; font-weight:600; font-size:12px;
+}
+.note{
+  margin: 6px 0 22px;
+  color: var(--muted);
+}
+.note code{
+  font-family: var(--mono);
+  background: #f2f4f8; color:#0b1736; padding: 1px 6px; border-radius: 6px;
+}
+
+/* ---- Sections / Cards ---- */
+.section-title{
+  font-size: var(--h2);
+  margin: 28px 0 12px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-title::after{
+  content:"";
+  height:1px; flex:1; background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 14px 10px;
+  margin: 10px 0 28px;
+}
+
+/* Tighten Vega canvas inside the card */
+.card .vega-embed{ margin: 4px 0 8px; }
+
+/* ---- Grid helpers ---- */
+.grid{ display:grid; gap: 24px; }
+.grid-2{ grid-template-columns: 1fr; }
+@media (min-width: 1000px){ .grid-2{ grid-template-columns: 1fr 1fr; } }
+
+/* ---- Chart headers + captions ---- */
+.chart-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap: 8px; margin-bottom: 6px;
+}
+.chart-title{
+  font-size: var(--h3); font-weight: 700; margin: 0;
+}
+.caption{
+  margin: 6px 2px 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+/* ---- Controls (sliders / selects) ---- */
+.controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+label{ color: var(--muted); font-size: 13px; }
+select, input[type="range"]{ accent-color: var(--accent); font: inherit; }
+select{
+  border:1px solid var(--border); background:#fff; color:var(--ink);
+  border-radius: 10px; padding: 6px 10px;
+}
+input[type="range"]{ height: 28px; width: 260px; }
+
+/* ---- Small helpers ---- */
+hr.sep{
+  height:1px; border:0; background: linear-gradient(90deg, var(--border), transparent);
+  margin: 18px 0 4px;
+}
+.kicker{
+  color: var(--muted);
+  text-transform: uppercase; letter-spacing: .08em;
+  font-weight: 700; font-size: 12px;
+}
+
+/* ---- Footer ---- */
+.footer{
+  color: var(--muted);
+  margin-top: 40px; text-align: center; font-size: 13px;
+}
+
+/* ---- Tweak Vega tooltip ---- */
+.vega-tooltip{
+  border-radius: 10px !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  font-family: var(--sans) !important;
+  font-size: 13px !important;
+}
