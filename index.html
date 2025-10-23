@@ -22,16 +22,18 @@
 <body>
   <div class="wrap">
     <h1>Malaysia Water Production (2000–2019)</h1>
-    <p class="note">Data: <code>water_production_2000_2019.csv</code> (production, MLD) &nbsp;•&nbsp; Map: <code>malaysia-states.json</code></p>
+    <p class="note">
+      Data: <code>water_production_2000_2019.csv</code> (production, MLD) • Map: geoBoundaries ADM1 (states)
+    </p>
 
     <div id="vis" class="chart"></div>
   </div>
 
   <script>
-    // --- Choropleth: Water production by state (select year) ---
-    // Uses your files exactly:
-    //  - GeoJSON:  https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json
-    //  - CSV:      https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv
+    // Using a stable, known-good GeoJSON for Malaysia states (ADM1)
+    // If you want to revert to your local malaysia-states.json later, we can—once we know its property names.
+    const MALAYSIA_GEOJSON =
+      "https://raw.githubusercontent.com/wmgeolab/geoBoundaries/main/releaseData/gbOpen/MYS/ADM1/geoBoundaries-MYS-ADM1.geojson";
 
     const spec = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -48,16 +50,20 @@
       ],
 
       "data": {
-        "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json",
+        "url": MALAYSIA_GEOJSON,
         "format": {"type": "geojson"}
       },
 
       "transform": [
-        // 1) Take the state name from the GeoJSON
-        {"calculate": "datum.properties.name", "as": "geo_name"},
+        // geoBoundaries uses `properties.shapeName` (fallbacks included just in case)
+        {
+          "calculate":
+            "isDefined(datum.properties) && isDefined(datum.properties.shapeName) ? datum.properties.shapeName : " +
+            "(isDefined(datum.properties) && isDefined(datum.properties.name) ? datum.properties.name : '')",
+          "as": "geo_name"
+        },
 
-        // 2) Map geo names -> CSV names where they differ.
-        //    If there is no mapping, we fall back to the original name.
+        // Map geo names -> CSV names where they differ (Penang/Melaka/W.P. variants).
         {
           "lookup": "geo_name",
           "from": {
@@ -79,13 +85,13 @@
           "as": "mapped_csv_name"
         },
 
-        // 3) Use the mapped name if present; otherwise use the original
+        // Use the mapped name if present; otherwise use original
         {
           "calculate": "isValid(datum.mapped_csv_name) ? datum.mapped_csv_name : datum.geo_name",
           "as": "state_key"
         },
 
-        // 4) Join to your production CSV
+        // Join to your production CSV
         {
           "lookup": "state_key",
           "from": {
@@ -98,7 +104,7 @@
           }
         },
 
-        // 5) Filter by the selected year
+        // Filter by the selected year
         {"filter": "datum.Year == year"}
       ],
 
