@@ -1,66 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Malaysia Water Production and Consumption</title>
+  <meta charset="utf-8" />
+  <title>Malaysia Water Production (2000–2019)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Vega / Vega-Lite / Embed -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <style>
+    :root { --maxw: 1100px; }
+    body { margin: 24px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    h1 { margin: 0 0 8px; }
+    .wrap { max-width: var(--maxw); }
+    .chart { margin: 20px 0 36px; }
+    .note { color: #666; font-size: 0.95rem; }
+  </style>
 </head>
 <body>
-  <h1>Malaysia Water Production (2000–2019)</h1>
-  <div id="vis"></div>
+  <div class="wrap">
+    <h1>Malaysia Water Production (2000–2019)</h1>
+    <p class="note">Data: <code>water_production_2000_2019.csv</code> (production, MLD) &nbsp;•&nbsp; Map: <code>malaysia-states.json</code></p>
+
+    <div id="vis" class="chart"></div>
+  </div>
 
   <script>
-const spec = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 700,
-  "height": 500,
-  "projection": {"type": "mercator"},
-  "params": [
-    {"name": "year", "value": 2019, "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}}
-  ],
-  "data": {
-    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json",
-    "format": {"type": "json", "property": "features"}
-  },
-  "transform": [
-    {"calculate": "lower(datum.properties.name)", "as": "map_state"},
-    {
-      "calculate": "replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(datum.map_state,'wilayah persekutuan kuala lumpur','w.p. kuala lumpur'),'kuala lumpur','w.p. kuala lumpur'),'penang','pulau pinang'),'negeri sembilan','negeri sembilan'),'melaka','melaka'),'malacca','melaka'),'perlis','perlis'),'terengganu','terengganu'),'pahang','pahang'),'sarawak','sarawak'),'sabah','sabah')", 
-      "as": "norm_state"
-    },
-    {
-      "lookup": "norm_state",
-      "from": {
-        "data": {
-          "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv",
-          "format": {"type": "csv"}
+    // --- Choropleth: Water production by state (select year) ---
+    // Uses your files exactly:
+    //  - GeoJSON:  https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json
+    //  - CSV:      https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv
+
+    const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 950,
+      "height": 560,
+      "projection": {"type": "mercator"},
+
+      "params": [
+        {
+          "name": "year",
+          "value": 2019,
+          "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}
+        }
+      ],
+
+      "data": {
+        "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json",
+        "format": {"type": "geojson"}
+      },
+
+      "transform": [
+        // 1) Take the state name from the GeoJSON
+        {"calculate": "datum.properties.name", "as": "geo_name"},
+
+        // 2) Map geo names -> CSV names where they differ.
+        //    If there is no mapping, we fall back to the original name.
+        {
+          "lookup": "geo_name",
+          "from": {
+            "data": {
+              "values": [
+                {"geo":"Penang", "csv":"Pulau Pinang"},
+                {"geo":"Malacca", "csv":"Melaka"},
+                {"geo":"Kuala Lumpur", "csv":"W.P. Kuala Lumpur"},
+                {"geo":"Labuan", "csv":"W.P. Labuan"},
+                {"geo":"Putrajaya", "csv":"W.P. Putrajaya"},
+                {"geo":"Wilayah Persekutuan Kuala Lumpur", "csv":"W.P. Kuala Lumpur"},
+                {"geo":"Wilayah Persekutuan Labuan", "csv":"W.P. Labuan"},
+                {"geo":"Wilayah Persekutuan Putrajaya", "csv":"W.P. Putrajaya"}
+              ]
+            },
+            "key": "geo",
+            "fields": ["csv"]
+          },
+          "as": "mapped_csv_name"
         },
-        "key": "State",
-        "fields": ["Year","Value","State"]
+
+        // 3) Use the mapped name if present; otherwise use the original
+        {
+          "calculate": "isValid(datum.mapped_csv_name) ? datum.mapped_csv_name : datum.geo_name",
+          "as": "state_key"
+        },
+
+        // 4) Join to your production CSV
+        {
+          "lookup": "state_key",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv",
+              "format": {"type": "csv"}
+            },
+            "key": "State",
+            "fields": ["State","Year","Value"]
+          }
+        },
+
+        // 5) Filter by the selected year
+        {"filter": "datum.Year == year"}
+      ],
+
+      "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.7},
+
+      "encoding": {
+        "color": {
+          "field": "Value",
+          "type": "quantitative",
+          "title": "Water Production (MLD)",
+          "scale": {"scheme": "blues"}
+        },
+        "tooltip": [
+          {"field": "state_key", "type": "nominal", "title": "State"},
+          {"field": "Value", "type": "quantitative", "title": "Production (MLD)"},
+          {"field": "Year", "type": "ordinal", "title": "Year"}
+        ]
       }
-    },
-    {"filter": "datum.Year == year"}
-  ],
-  "mark": {"type": "geoshape", "stroke": "#fff"},
-  "encoding": {
-    "color": {
-      "field": "Value",
-      "type": "quantitative",
-      "title": "Water Production (MLD)",
-      "scale": {"scheme": "blues"}
-    },
-    "tooltip": [
-      {"field": "properties.name", "type": "nominal", "title": "State"},
-      {"field": "Value", "type": "quantitative"},
-      {"field": "Year", "type": "ordinal"}
-    ]
-  }
-};
+    };
 
-vegaEmbed('#vis', spec, {"actions": false});
-</script>
-
+    vegaEmbed('#vis', spec, { actions: false });
+  </script>
 </body>
 </html>
