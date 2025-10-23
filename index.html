@@ -55,16 +55,26 @@
 
     <h2>6) Change in Total Consumption — Compare Two Years</h2>
     <div id="dumbbell" class="chart"></div>
+
+    <h2>7) Water Production by State (MLD)</h2>
+    <div id="map_prod" class="chart"></div>
+
+    <h2>8) Domestic Share of Water Consumption by State (%)</h2>
+    <div id="map_share" class="chart"></div>
   </div>
 
   <script>
-    // Embed only the charts that exist in your repo
+    // Existing charts
     vegaEmbed('#line', 'linechart.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#bars', 'bars.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#scatter', 'scatter.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#area', 'area.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#sparklines', 'state_sparklines.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#dumbbell', 'change_dumbbell.json', { actions: false, renderer: 'canvas' }).catch(console.error);
+
+    // New maps
+    vegaEmbed('#map_prod', 'map_production.json', { actions: false, renderer: 'canvas' }).catch(console.error);
+    vegaEmbed('#map_share', 'map_domestic_share.json', { actions: false, renderer: 'canvas' }).catch(console.error);
   </script>
 </body>
 </html>
