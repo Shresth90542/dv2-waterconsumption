@@ -1,55 +1,52 @@
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "title": "Sectoral Water Consumption by State",
-  "width": 520,
-  "height": 560,
-  "data": {
-    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
-    "format": {"type": "csv"}
-  },
-  "params": [
-    {
-      "name": "year",
-      "value": 2019,
-      "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Malaysia Water Visualisations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Vega Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <style>
+    :root { --maxw: 1100px; }
+    body {
+      margin: 28px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #111;
+      background: #fafafa;
     }
-  ],
-  "transform": [
-    {"calculate": "year(toDate(datum.date))", "as": "Year"},
-    {"filter": "datum.state != 'Malaysia' && datum.Year == year"},
-    {
-      "calculate": "datum.sector == 'domestic' ? 'Domestic' : 'Non-domestic'",
-      "as": "Sector"
-    },
-    {
-      "aggregate": [{"op": "sum", "field": "value", "as": "Amount"}],
-      "groupby": ["state", "Sector"]
-    },
-    {
-      "joinaggregate": [{"op": "sum", "field": "Amount", "as": "StateTotal"}],
-      "groupby": ["state"]
-    }
-  ],
-  "mark": "bar",
-  "encoding": {
-    "y": {
-      "field": "state",
-      "type": "nominal",
-      "sort": {"field": "StateTotal", "order": "descending"},
-      "title": "State"
-    },
-    "x": {
-      "aggregate": "sum",
-      "field": "Amount",
-      "type": "quantitative",
-      "title": "Consumption (MLD)"
-    },
-    "color": {"field": "Sector", "type": "nominal"},
-    "tooltip": [
-      {"field": "state", "title": "State"},
-      {"field": "Sector", "title": "Sector"},
-      {"aggregate": "sum", "field": "Amount", "title": "Sector Consumption (MLD)"},
-      {"field": "Year", "title": "Year"}
-    ]
-  }
-}
+    .wrap { max-width: var(--maxw); margin: 0 auto; }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    h2 { margin: 32px 0 10px; font-size: 22px; }
+    .chart { margin-bottom: 48px; }
+    .note { color: #666; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Malaysia Water: Production & Consumption</h1>
+    <p class="note">
+      Data sources: 
+      <code>water_production_2000_2019.csv</code> & 
+      <code>water_consumption.csv</code>
+    </p>
+
+    <!-- Chart 1 -->
+    <h2>1) National Water Production (2000–2019)</h2>
+    <div id="line" class="chart"></div>
+
+    <!-- Chart 2 -->
+    <h2>2) Sectoral Water Consumption by State</h2>
+    <div id="bar" class="chart"></div>
+  </div>
+
+  <script>
+    // Embed the charts — filenames must match exactly
+    vegaEmbed('#line', 'linechart.json', { actions: false }).catch(console.error);
+    vegaEmbed('#bar', 'bar.json', { actions: false }).catch(console.error);
+  </script>
+</body>
+</html>
