@@ -1,0 +1,46 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": "Malaysia — Total Water Production (2000–2019)",
+  "width": 900,
+  "height": 360,
+  "data": {
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "toNumber(datum.Year)", "as": "YearNum"},
+    {
+      "calculate": "toNumber(datum['Value (Million litres per day)'])",
+      "as": "ProdMLD"
+    },
+    {
+      "aggregate": [{"op": "sum", "field": "ProdMLD", "as": "TotalProd"}],
+      "groupby": ["YearNum"]
+    },
+    {"filter": "isValid(datum.YearNum) && isValid(datum.TotalProd)"}
+  ],
+  "mark": {"type": "line", "point": true},
+  "encoding": {
+    "x": {
+      "field": "YearNum",
+      "type": "quantitative",
+      "title": "Year",
+      "scale": {"nice": false, "domain": [2000, 2019]},
+      "axis": {"tickMinStep": 1}
+    },
+    "y": {
+      "field": "TotalProd",
+      "type": "quantitative",
+      "title": "Total Production (MLD)"
+    },
+    "tooltip": [
+      {"field": "YearNum", "type": "ordinal", "title": "Year"},
+      {
+        "field": "TotalProd",
+        "type": "quantitative",
+        "title": "Total Production (MLD)"
+      }
+    ]
+  },
+  "config": {}
+}
