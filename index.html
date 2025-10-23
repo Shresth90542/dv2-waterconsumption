@@ -2,56 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Malaysia Water Visualisations</title>
+  <title>Malaysia Water Analysis Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Vega libraries -->
+  <!-- Vega Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
   <style>
-    :root { --maxw: 1100px; }
+    :root {
+      --maxw: 1100px;
+      --accent: #2563eb;
+    }
     body {
       margin: 28px;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: "Segoe UI", Roboto, sans-serif;
       background: #fafafa;
       color: #111;
+      line-height: 1.5;
     }
-    .wrap { max-width: var(--maxw); margin: 0 auto; }
-    h1 { margin: 0 0 10px; font-size: 28px; }
-    h2 { margin: 32px 0 10px; font-size: 22px; }
-    .chart { margin-bottom: 48px; }
-    .note { color: #666; font-size: 0.9rem; }
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    h2 {
+      font-size: 22px;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      color: var(--accent);
+    }
+    .note {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .chart {
+      margin-bottom: 48px;
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.8rem;
+      margin-top: 40px;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <h1>Malaysia Water: Production & Consumption</h1>
+    <h1>Malaysia Water: Production & Consumption Dashboard</h1>
     <p class="note">
       Data sources: 
       <code>water_production_2000_2019.csv</code> and 
-      <code>water_consumption.csv</code>
+      <code>water_consumption.csv</code><br>
+      Visualised using Vega-Lite.
     </p>
 
-    <!-- 1) Line chart -->
+    <!-- 1) Line Chart -->
     <h2>1) National Water Production (2000–2019)</h2>
     <div id="line" class="chart"></div>
 
-    <!-- 2) Stacked bar chart -->
+    <!-- 2) Bar Chart -->
     <h2>2) Sectoral Water Consumption by State</h2>
     <div id="bars" class="chart"></div>
 
-    <!-- 3) Scatter plot -->
-    <h2>3) Water Production vs Total Consumption by State</h2>
-    <div id="scatter" class="chart"></div>
-  </div>
-
-  <script>
-    // Chart embeds — filenames must match exactly
-    vegaEmbed('#line', 'linechart.json', { actions: false }).catch(console.error);
-    vegaEmbed('#bars', 'bars.json', { actions: false }).catch(console.error);
-    vegaEmbed('#scatter', 'scatter.json', { actions: false }).catch(console.error);
-  </script>
-</body>
-</html>
+    <!-- 3) Area Chart -->
