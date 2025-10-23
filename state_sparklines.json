@@ -1,90 +1,72 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
   "title": {
-    "text": "Total Water Consumption by State (2003–2022)",
+    "text": "Water Consumption Trend by State (2003–2022)",
     "fontSize": 18,
     "fontWeight": "bold",
     "anchor": "start"
   },
+  "width": 900,
+  "height": 400,
   "data": {
     "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
     "format": {"type": "csv"}
   },
-  "transform": [
-    {"calculate": "year(toDate(datum.date))", "as": "Year"},
-    {"filter": "datum.state != 'Malaysia'"},
+  "params": [
     {
-      "aggregate": [{"op": "sum", "field": "value", "as": "Total"}],
-      "groupby": ["state", "Year"]
+      "name": "state_select",
+      "bind": {
+        "input": "select",
+        "options": [
+          "Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan",
+          "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah",
+          "Sarawak", "Selangor", "Terengganu", "W.P. Labuan"
+        ],
+        "labels": [
+          "Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan",
+          "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah",
+          "Sarawak", "Selangor", "Terengganu", "W.P. Labuan"
+        ],
+        "name": "Choose State: "
+      },
+      "value": "Selangor"
     }
   ],
-  "facet": {
-    "field": "state",
-    "type": "nominal",
-    "columns": 4,
-    "sort": "ascending",
-    "header": {
-      "labelFontSize": 14,
-      "labelColor": "#111",
-      "labelFontWeight": "bold",
-      "labelLimit": 140,
-      "labelPadding": 6
+  "transform": [
+    {"calculate": "year(toDate(datum.date))", "as": "Year"},
+    {"filter": "datum.state == state_select"},
+    {"aggregate": [{"op": "sum", "field": "value", "as": "Total"}], "groupby": ["Year"]}
+  ],
+  "layer": [
+    {
+      "mark": {"type": "area", "opacity": 0.15, "color": "#2563eb"}
     },
-    "title": null
-  },
-  "spec": {
-    "width": 220,
-    "height": 120,
-    "layer": [
-      {"mark": {"type": "area", "opacity": 0.1, "color": "#2563eb"}},
-      {
-        "mark": {
-          "type": "line",
-          "stroke": "#2563eb",
-          "strokeWidth": 2,
-          "interpolate": "monotone"
-        }
-      }
-    ],
-    "encoding": {
-      "x": {
-        "field": "Year",
-        "type": "quantitative",
-        "scale": {"domain": [2003, 2022]},
-        "axis": {
-          "title": null,
-          "grid": false,
-          "tickCount": 5,
-          "labelAngle": 0,
-          "labelFontSize": 10
-        }
-      },
-      "y": {
-        "field": "Total",
-        "type": "quantitative",
-        "axis": {
-          "title": "MLD",
-          "titleFontSize": 10,
-          "labelFontSize": 10,
-          "grid": true,
-          "gridColor": "#f3f4f6",
-          "tickCount": 4
-        }
-      },
-      "tooltip": [
-        {"field": "state", "title": "State"},
-        {"field": "Year", "title": "Year"},
-        {"field": "Total", "type": "quantitative", "title": "Consumption (MLD)"}
-      ]
+    {
+      "mark": {"type": "line", "stroke": "#2563eb", "strokeWidth": 3, "interpolate": "monotone"}
+    },
+    {
+      "mark": {"type": "point", "filled": true, "color": "#1e40af", "size": 60}
     }
+  ],
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "quantitative",
+      "axis": {"title": "Year", "tickCount": 6, "labelAngle": 0}
+    },
+    "y": {
+      "field": "Total",
+      "type": "quantitative",
+      "axis": {"title": "Total Consumption (MLD)", "grid": true}
+    },
+    "tooltip": [
+      {"field": "Year", "type": "ordinal", "title": "Year"},
+      {"field": "Total", "type": "quantitative", "title": "Consumption (MLD)"}
+    ]
   },
   "config": {
     "view": {"stroke": null},
-    "axis": {
-      "domainColor": "#e5e7eb",
-      "tickColor": "#e5e7eb",
-      "titleColor": "#111827"
-    },
+    "axis": {"domainColor": "#e5e7eb", "tickColor": "#e5e7eb"},
     "background": "white"
   }
 }
