@@ -12,48 +12,55 @@
   <div id="vis"></div>
 
   <script>
-    const spec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 700,
-      "height": 500,
-      "projection": {"type": "mercator"},
-      "params": [
-        {"name": "year", "value": 2019, "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}}
-      ],
-      "data": {
-        "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json",
-        "format": {"type": "json", "property": "features"}
-      },
-      "transform": [
-        {
-          "lookup": "properties.name",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/m-20210316115111_202103221134150_production-of-water-supplied-by-state-malaysia-2000-2019.csv",
-              "format": {"type": "csv"}
-            },
-            "key": "State",
-            "fields": ["Year", "Value"]
-          }
+const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 700,
+  "height": 500,
+  "projection": {"type": "mercator"},
+  "params": [
+    {"name": "year", "value": 2019, "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}}
+  ],
+  "data": {
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json",
+    "format": {"type": "json", "property": "features"}
+  },
+  "transform": [
+    {"calculate": "lower(datum.properties.name)", "as": "map_state"},
+    {
+      "calculate": "replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(datum.map_state,'wilayah persekutuan kuala lumpur','w.p. kuala lumpur'),'kuala lumpur','w.p. kuala lumpur'),'penang','pulau pinang'),'negeri sembilan','negeri sembilan'),'melaka','melaka'),'malacca','melaka'),'perlis','perlis'),'terengganu','terengganu'),'pahang','pahang'),'sarawak','sarawak'),'sabah','sabah')", 
+      "as": "norm_state"
+    },
+    {
+      "lookup": "norm_state",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv",
+          "format": {"type": "csv"}
         },
-        {"filter": "datum.Year == year"}
-      ],
-      "mark": {"type": "geoshape", "stroke": "#fff"},
-      "encoding": {
-        "color": {
-          "field": "Value",
-          "type": "quantitative",
-          "title": "Water production (MLD)",
-          "scale": {"scheme": "blues"}
-        },
-        "tooltip": [
-          {"field": "properties.name", "type": "nominal", "title": "State"},
-          {"field": "Value", "type": "quantitative"}
-        ]
+        "key": "State",
+        "fields": ["Year","Value","State"]
       }
-    };
+    },
+    {"filter": "datum.Year == year"}
+  ],
+  "mark": {"type": "geoshape", "stroke": "#fff"},
+  "encoding": {
+    "color": {
+      "field": "Value",
+      "type": "quantitative",
+      "title": "Water Production (MLD)",
+      "scale": {"scheme": "blues"}
+    },
+    "tooltip": [
+      {"field": "properties.name", "type": "nominal", "title": "State"},
+      {"field": "Value", "type": "quantitative"},
+      {"field": "Year", "type": "ordinal"}
+    ]
+  }
+};
 
-    vegaEmbed('#vis', spec, {"actions": false});
-  </script>
+vegaEmbed('#vis', spec, {"actions": false});
+</script>
+
 </body>
 </html>
