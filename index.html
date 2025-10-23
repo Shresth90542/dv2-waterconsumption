@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Malaysia Water: Production & Consumption</title>
+  <title>Malaysia Water — Production & Consumption Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Vega libraries -->
@@ -10,88 +10,129 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
-  <!-- Dashboard styles -->
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="wrap">
-    <!-- Header -->
-    <div class="page-header">
-      <h1>Malaysia Water: Production &amp; Consumption</h1>
-      <span class="badge">Dashboard</span>
-    </div>
-    <p class="note">
-      Data: <code>water_production_2000_2019.csv</code>, <code>water_consumption.csv</code>.
-    </p>
-
-    <!-- 1 -->
-    <h2 class="section-title">1) National Water Production (2000–2019)</h2>
-    <div class="card">
-      <div class="chart-head">
-        <p class="chart-title">Malaysia — Total Water Production</p>
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <div class="masthead__titles">
+        <h1>Malaysia Water — Production &amp; Consumption</h1>
+        <p class="subtitle">Trends, sector mix, state comparisons &amp; geospatial patterns (2000–2022)</p>
       </div>
-      <div id="line"></div>
-      <p class="caption">Annual water produced nationwide in million litres per day (MLD).</p>
+      <span class="badge">Interactive</span>
     </div>
+  </header>
 
-    <!-- 2 + 3 -->
-    <h2 class="section-title">2–3) State Comparisons</h2>
-    <div class="grid grid-2">
-      <div class="card">
-        <div class="chart-head"><p class="chart-title">Sectoral Water Consumption by State</p></div>
-        <div id="bars"></div>
-        <p class="caption">Stacked bars show Domestic vs Non-domestic consumption for the selected year.</p>
+  <main class="wrap">
+    <section>
+      <h2 class="section-title">1) National Water Production (2000–2019)</h2>
+      <div class="card card--equal">
+        <div class="chart-head">
+          <p class="chart-title">Malaysia — Total Water Production</p>
+        </div>
+        <div id="line" class="viz"></div>
+        <p class="caption">
+          <strong>What to look for:</strong> steady long-run growth in national production (MLD).
+          Minor year-to-year fluctuations align with infrastructure additions and demand growth.
+        </p>
       </div>
-      <div class="card">
-        <div class="chart-head"><p class="chart-title">Production vs Total Consumption</p></div>
-        <div id="scatter"></div>
-        <p class="caption">Each dot is a state; the 45° diagonal indicates parity between production and consumption.</p>
+    </section>
+
+    <section>
+      <h2 class="section-title">2–3) State Comparisons (same year)</h2>
+      <div class="grid grid-2">
+        <div class="card card--equal">
+          <div class="chart-head"><p class="chart-title">Sectoral Water Consumption by State</p></div>
+          <div id="bars" class="viz"></div>
+          <p class="caption">
+            <strong>Interpretation:</strong> stacked bars show each state’s split between
+            <em>Domestic</em> and <em>Non-domestic</em> use. Use the slider to change the year.
+          </p>
+        </div>
+
+        <div class="card card--equal">
+          <div class="chart-head"><p class="chart-title">Production vs Total Consumption</p></div>
+          <div id="scatter" class="viz"></div>
+          <p class="caption">
+            <strong>Interpretation:</strong> each dot is a state in the selected year.
+            Points above the 45° line indicate <em>production &gt; consumption</em> (surplus);
+            below indicates <em>deficit</em>.
+          </p>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 4 -->
-    <h2 class="section-title">4) Malaysia Consumption by Sector (2003–2022)</h2>
-    <div class="card">
-      <div class="chart-head"><p class="chart-title">Domestic &amp; Non-domestic Over Time</p></div>
-      <div id="area"></div>
-      <p class="caption">Area chart shows national consumption by sector (MLD).</p>
-    </div>
+    <section>
+      <h2 class="section-title">4) Malaysia Consumption by Sector (2003–2022)</h2>
+      <div class="card card--equal">
+        <div class="chart-head"><p class="chart-title">Domestic &amp; Non-domestic Over Time</p></div>
+        <div id="area" class="viz"></div>
+        <p class="caption">
+          <strong>What to look for:</strong> long-run increase in domestic demand with a rising
+          contribution from non-domestic users (industry, commercial, etc.).
+        </p>
+      </div>
+    </section>
 
-    <!-- 5 -->
-    <h2 class="section-title">5) State Consumption Trends (2003–2022)</h2>
-    <div class="card">
-      <div class="chart-head"><p class="chart-title">Water Consumption Trend by State</p></div>
-      <div id="sparklines"></div>
-      <p class="caption">Use the dropdown in the chart to switch states.</p>
-    </div>
+    <section>
+      <h2 class="section-title">5) State Consumption Trends (2003–2022)</h2>
+      <div class="card card--equal">
+        <div class="chart-head"><p class="chart-title">Water Consumption Trend by State</p></div>
+        <div id="sparklines" class="viz"></div>
+        <p class="caption">
+          <strong>How to use:</strong> choose a state from the dropdown inside the chart to see its clean trend line (MLD).
+        </p>
+      </div>
+    </section>
 
-    <!-- 6 -->
-    <h2 class="section-title">6) Change in Total Consumption — Compare Two Years</h2>
-    <div class="card">
-      <div class="chart-head"><p class="chart-title">Before–After (Dumbbell)</p></div>
-      <div id="dumbbell"></div>
-      <p class="caption">Use the sliders to compare two years; lines show magnitude of change by state.</p>
-    </div>
+    <section>
+      <h2 class="section-title">6) Change in Total Consumption — Compare Two Years</h2>
+      <div class="card card--equal">
+        <div class="chart-head"><p class="chart-title">Before–After (Dumbbell)</p></div>
+        <div id="dumbbell" class="viz"></div>
+        <p class="caption">
+          <strong>How to use:</strong> move the sliders to set Year A and Year B.
+          Lines show magnitude &amp; direction of change by state; sorted by largest shift.
+        </p>
+      </div>
+    </section>
 
-    <!-- 7 -->
-    <h2 class="section-title">7) Water Production by State (Map)</h2>
-    <div class="card">
-      <div class="chart-head"><p class="chart-title">Water Production by State (MLD)</p></div>
-      <div id="map_prod"></div>
-      <p class="caption">Choropleth shows state-level production; slider selects year.</p>
-    </div>
+    <section>
+      <h2 class="section-title">7) Water Production by State (Map)</h2>
+      <div class="card card--equal">
+        <div class="chart-head"><p class="chart-title">Production (MLD) by State</p></div>
+        <div id="map_prod" class="viz"></div>
+        <p class="caption">
+          <strong>Map reading:</strong> darker shades indicate higher production in the selected year.
+          Hover to see the exact values.
+        </p>
+      </div>
+    </section>
 
-    <!-- 8 -->
-    <h2 class="section-title">8) Domestic Share of Consumption by State (Map)</h2>
-    <div class="card">
-      <div class="chart-head"><p class="chart-title">Domestic Share of Consumption (%)</p></div>
-      <div id="map_share"></div>
-      <p class="caption">Share of consumption served to the domestic sector; slider selects year.</p>
-    </div>
+    <section>
+      <h2 class="section-title">8) Domestic Share of Consumption by State (Map)</h2>
+      <div class="card card--equal">
+        <div class="chart-head"><p class="chart-title">Domestic Share (%) by State</p></div>
+        <div id="map_share" class="viz"></div>
+        <p class="caption">
+          <strong>Map reading:</strong> percentage of each state’s consumption served to households.
+          States with higher domestic share appear darker.
+        </p>
+      </div>
+    </section>
+  </main>
 
-    <hr class="sep">
-    <p class="footer">Prepared for FIT3179 · Visualisation by &lt;Your Name&gt;</p>
-  </div>
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <p>
+        <strong>Data sources:</strong>
+        <code>water_production_2000_2019.csv</code>,
+        <code>water_consumption.csv</code>
+      </p>
+      <p>Prepared by <strong>Shresth Sohaney</strong> (Student ID: <strong>33806314</strong>)</p>
+    </div>
+  </footer>
 
   <script>
     vegaEmbed('#line', 'linechart.json', { actions: false, renderer: 'canvas' }).catch(console.error);
