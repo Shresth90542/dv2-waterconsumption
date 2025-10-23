@@ -10,69 +10,96 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
-  <style>
-    :root { --maxw: 1200px; }
-    * { box-sizing: border-box; }
-    body {
-      margin: 28px;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      background: #fafafa; color: #111;
-      line-height: 1.35;
-    }
-    .wrap { max-width: var(--maxw); margin: 0 auto; }
-    h1 { margin: 0 0 8px; font-size: 28px; }
-    p.note { margin: 0 0 24px; color:#666; }
-    h2 { margin: 26px 0 10px; font-size: 22px; }
-    .chart { margin-bottom: 36px; background:#fff; padding:12px; border-radius:12px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
-    .grid { display:grid; gap:24px; }
-    @media (min-width: 1000px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-  </style>
+  <!-- Dashboard styles -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="wrap">
-    <h1>Malaysia Water: Production & Consumption</h1>
-    <p class="note">Data: <code>water_production_2000_2019.csv</code>, <code>water_consumption.csv</code></p>
+    <!-- Header -->
+    <div class="page-header">
+      <h1>Malaysia Water: Production &amp; Consumption</h1>
+      <span class="badge">Dashboard</span>
+    </div>
+    <p class="note">
+      Data: <code>water_production_2000_2019.csv</code>, <code>water_consumption.csv</code>.
+    </p>
 
-    <h2>1) National Water Production (2000–2019)</h2>
-    <div id="line" class="chart"></div>
-
-    <div class="grid grid-2">
-      <div class="chart">
-        <h2 style="margin-top:0">2) Sectoral Water Consumption by State</h2>
-        <div id="bars"></div>
+    <!-- 1 -->
+    <h2 class="section-title">1) National Water Production (2000–2019)</h2>
+    <div class="card">
+      <div class="chart-head">
+        <p class="chart-title">Malaysia — Total Water Production</p>
       </div>
-      <div class="chart">
-        <h2 style="margin-top:0">3) Production vs Total Consumption by State</h2>
+      <div id="line"></div>
+      <p class="caption">Annual water produced nationwide in million litres per day (MLD).</p>
+    </div>
+
+    <!-- 2 + 3 -->
+    <h2 class="section-title">2–3) State Comparisons</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="chart-head"><p class="chart-title">Sectoral Water Consumption by State</p></div>
+        <div id="bars"></div>
+        <p class="caption">Stacked bars show Domestic vs Non-domestic consumption for the selected year.</p>
+      </div>
+      <div class="card">
+        <div class="chart-head"><p class="chart-title">Production vs Total Consumption</p></div>
         <div id="scatter"></div>
+        <p class="caption">Each dot is a state; the 45° diagonal indicates parity between production and consumption.</p>
       </div>
     </div>
 
-    <h2>4) Total Malaysia Water Consumption by Sector (2003–2022)</h2>
-    <div id="area" class="chart"></div>
+    <!-- 4 -->
+    <h2 class="section-title">4) Malaysia Consumption by Sector (2003–2022)</h2>
+    <div class="card">
+      <div class="chart-head"><p class="chart-title">Domestic &amp; Non-domestic Over Time</p></div>
+      <div id="area"></div>
+      <p class="caption">Area chart shows national consumption by sector (MLD).</p>
+    </div>
 
-    <h2>5) State Consumption Trends (2003–2022)</h2>
-    <div id="sparklines" class="chart"></div>
+    <!-- 5 -->
+    <h2 class="section-title">5) State Consumption Trends (2003–2022)</h2>
+    <div class="card">
+      <div class="chart-head"><p class="chart-title">Water Consumption Trend by State</p></div>
+      <div id="sparklines"></div>
+      <p class="caption">Use the dropdown in the chart to switch states.</p>
+    </div>
 
-    <h2>6) Change in Total Consumption — Compare Two Years</h2>
-    <div id="dumbbell" class="chart"></div>
+    <!-- 6 -->
+    <h2 class="section-title">6) Change in Total Consumption — Compare Two Years</h2>
+    <div class="card">
+      <div class="chart-head"><p class="chart-title">Before–After (Dumbbell)</p></div>
+      <div id="dumbbell"></div>
+      <p class="caption">Use the sliders to compare two years; lines show magnitude of change by state.</p>
+    </div>
 
-    <h2>7) Water Production by State (MLD)</h2>
-    <div id="map_prod" class="chart"></div>
+    <!-- 7 -->
+    <h2 class="section-title">7) Water Production by State (Map)</h2>
+    <div class="card">
+      <div class="chart-head"><p class="chart-title">Water Production by State (MLD)</p></div>
+      <div id="map_prod"></div>
+      <p class="caption">Choropleth shows state-level production; slider selects year.</p>
+    </div>
 
-    <h2>8) Domestic Share of Water Consumption by State (%)</h2>
-    <div id="map_share" class="chart"></div>
+    <!-- 8 -->
+    <h2 class="section-title">8) Domestic Share of Consumption by State (Map)</h2>
+    <div class="card">
+      <div class="chart-head"><p class="chart-title">Domestic Share of Consumption (%)</p></div>
+      <div id="map_share"></div>
+      <p class="caption">Share of consumption served to the domestic sector; slider selects year.</p>
+    </div>
+
+    <hr class="sep">
+    <p class="footer">Prepared for FIT3179 · Visualisation by &lt;Your Name&gt;</p>
   </div>
 
   <script>
-    // Existing charts
     vegaEmbed('#line', 'linechart.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#bars', 'bars.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#scatter', 'scatter.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#area', 'area.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#sparklines', 'state_sparklines.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#dumbbell', 'change_dumbbell.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-
-    // New maps
     vegaEmbed('#map_prod', 'map_production.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#map_share', 'map_domestic_share.json', { actions: false, renderer: 'canvas' }).catch(console.error);
   </script>
