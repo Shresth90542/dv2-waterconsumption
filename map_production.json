@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "title": "Water Production by State (MLD)",
-  "width": 900,
+  "title": "Production (MLD) by State",
+  "width": 1000,
   "height": 520,
   "projection": {"type": "mercator"},
   "params": [
@@ -15,12 +15,12 @@
     {"calculate": "toNumber(datum.Year)", "as": "YearNum"},
     {"calculate": "toNumber(datum['Value (Million litres per day)'])", "as": "ProdMLD"},
     {
-      "calculate": "replace(replace(datum.State,'W.P. Labuan','Labuan'),'Pulau Pinang','Pulau Pinang')",
-      "as": "state_norm"
+      "calculate": "datum.State==='Melaka' ? 'Malacca' : datum.State==='Pulau Pinang' ? 'Penang' : datum.State==='W.P. Labuan' ? 'Labuan' : datum.State",
+      "as": "JoinName"
     },
-    {"filter": "datum.YearNum == year && datum.state_norm != 'Malaysia'"},
+    {"filter": "datum.YearNum == year && datum.JoinName != 'Malaysia'"},
     {
-      "lookup": "state_norm",
+      "lookup": "JoinName",
       "from": {
         "data": {
           "url": "https://gist.githubusercontent.com/heiswayi/8a9b39dcf749c31a/raw/b2b83685f5205aee7c35f0b543201907660fac55e/malaysia.geojson",
@@ -31,7 +31,7 @@
       }
     }
   ],
-  "mark": {"type": "geoshape", "stroke": "#fff", "strokeWidth": 0.5},
+  "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.6},
   "encoding": {
     "shape": {"field": "geometry", "type": "geojson"},
     "color": {
@@ -41,7 +41,7 @@
       "title": "Production (MLD)"
     },
     "tooltip": [
-      {"field": "state_norm", "title": "State"},
+      {"field": "JoinName", "title": "State"},
       {"field": "YearNum", "title": "Year"},
       {"field": "ProdMLD", "type": "quantitative", "title": "Production (MLD)"}
     ]
