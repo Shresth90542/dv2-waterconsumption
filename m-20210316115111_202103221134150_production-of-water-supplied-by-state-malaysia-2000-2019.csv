@@ -1,0 +1,281 @@
+State,Year,Value (Million litres per day)
+Johor,2000,1157.8
+Johor,2001,1201
+Johor,2002,1260
+Johor,2003,1118
+Johor,2004,1003
+Johor,2005,1003
+Johor,2006,1363
+Johor,2007,1387
+Johor,2008,1430
+Johor,2009,1466
+Johor,2010,1476
+Johor,2011,1528
+Johor,2012,1512
+Johor,2013,1508
+Johor,2014,1568
+Johor,2015,1619
+Johor,2016,1737
+Johor,2017,1680
+Johor,2018,1757
+Johor,2019,1888
+Kedah,2000,804.3
+Kedah,2001,841.3
+Kedah,2002,863.8
+Kedah,2003,927.7
+Kedah,2004,976
+Kedah,2005,976
+Kedah,2006,1029
+Kedah,2007,1088
+Kedah,2008,1157
+Kedah,2009,1173
+Kedah,2010,1194
+Kedah,2011,1237
+Kedah,2012,1292
+Kedah,2013,1322
+Kedah,2014,1299
+Kedah,2015,1315
+Kedah,2016,1361
+Kedah,2017,1370
+Kedah,2018,1446
+Kedah,2019,1474
+Kelantan,2000,212.7
+Kelantan,2001,216.4
+Kelantan,2002,216.1
+Kelantan,2003,228.1
+Kelantan,2004,275
+Kelantan,2005,275
+Kelantan,2006,295
+Kelantan,2007,328
+Kelantan,2008,341
+Kelantan,2009,343
+Kelantan,2010,377
+Kelantan,2011,403
+Kelantan,2012,406
+Kelantan,2013,430
+Kelantan,2014,445
+Kelantan,2015,454
+Kelantan,2016,471
+Kelantan,2017,475
+Kelantan,2018,491
+Kelantan,2019,503
+Melaka,2000,323.9
+Melaka,2001,320
+Melaka,2002,350.4
+Melaka,2003,375
+Melaka,2004,399
+Melaka,2005,415
+Melaka,2006,393
+Melaka,2007,411
+Melaka,2008,428
+Melaka,2009,443
+Melaka,2010,443
+Melaka,2011,455
+Melaka,2012,478
+Melaka,2013,487
+Melaka,2014,532
+Melaka,2015,519
+Melaka,2016,510
+Melaka,2017,513
+Melaka,2018,528
+Melaka,2019,538
+Negeri Sembilan,2000,490.4
+Negeri Sembilan,2001,519.7
+Negeri Sembilan,2002,620
+Negeri Sembilan,2003,634.5
+Negeri Sembilan,2004,648.6
+Negeri Sembilan,2005,642
+Negeri Sembilan,2006,746
+Negeri Sembilan,2007,690
+Negeri Sembilan,2008,665
+Negeri Sembilan,2009,659
+Negeri Sembilan,2010,724
+Negeri Sembilan,2011,742
+Negeri Sembilan,2012,735
+Negeri Sembilan,2013,736
+Negeri Sembilan,2014,744
+Negeri Sembilan,2015,752
+Negeri Sembilan,2016,779
+Negeri Sembilan,2017,771
+Negeri Sembilan,2018,780
+Negeri Sembilan,2019,784
+Pahang,2000,609.7
+Pahang,2001,926.7
+Pahang,2002,631.7
+Pahang,2003,627
+Pahang,2004,687
+Pahang,2005,709
+Pahang,2006,701
+Pahang,2007,890
+Pahang,2008,915
+Pahang,2009,915
+Pahang,2010,966
+Pahang,2011,1079
+Pahang,2012,1089
+Pahang,2013,1065
+Pahang,2014,1108
+Pahang,2015,1129
+Pahang,2016,1111
+Pahang,2017,1109
+Pahang,2018,1158
+Pahang,2019,1194
+Perak,2000,811.8
+Perak,2001,865
+Perak,2002,830
+Perak,2003,897.3
+Perak,2004,897.3
+Perak,2005,955
+Perak,2006,963
+Perak,2007,973
+Perak,2008,1014
+Perak,2009,1039
+Perak,2010,1080
+Perak,2011,1109
+Perak,2012,1155
+Perak,2013,1215
+Perak,2014,1224
+Perak,2015,1289
+Perak,2016,1317
+Perak,2017,1314
+Perak,2018,1333
+Perak,2019,1357
+Perlis,2000,83.9
+Perlis,2001,84.2
+Perlis,2002,87.6
+Perlis,2003,92.5
+Perlis,2004,93
+Perlis,2005,92
+Perlis,2006,95
+Perlis,2007,97
+Perlis,2008,108
+Perlis,2009,109
+Perlis,2010,147
+Perlis,2011,191
+Perlis,2012,211
+Perlis,2013,206
+Perlis,2014,208
+Perlis,2015,220
+Perlis,2016,243
+Perlis,2017,228
+Perlis,2018,234
+Perlis,2019,252
+Pulau Pinang,2000,741.1
+Pulau Pinang,2001,762.7
+Pulau Pinang,2002,767
+Pulau Pinang,2003,759.1
+Pulau Pinang,2004,800.2
+Pulau Pinang,2005,819
+Pulau Pinang,2006,840
+Pulau Pinang,2007,865
+Pulau Pinang,2008,896
+Pulau Pinang,2009,913
+Pulau Pinang,2010,957
+Pulau Pinang,2011,951
+Pulau Pinang,2012,964
+Pulau Pinang,2013,988
+Pulau Pinang,2014,995
+Pulau Pinang,2015,1014
+Pulau Pinang,2016,1054
+Pulau Pinang,2017,1058
+Pulau Pinang,2018,1073
+Pulau Pinang,2019,1093
+Sabah,2000,706.1
+Sabah,2001,704.9
+Sabah,2002,691
+Sabah,2003,732
+Sabah,2004,736
+Sabah,2005,740
+Sabah,2006,743
+Sabah,2007,772
+Sabah,2008,820
+Sabah,2009,877
+Sabah,2010,931
+Sabah,2011,989
+Sabah,2012,1057
+Sabah,2013,1132
+Sabah,2014,1196
+Sabah,2015,1229
+Sabah,2016,1223
+Sabah,2017,1261
+Sabah,2018,1304
+Sabah,2019,1374
+Sarawak,2000,453.4
+Sarawak,2001,476.5
+Sarawak,2002,670
+Sarawak,2003,698
+Sarawak,2004,752
+Sarawak,2005,748.3
+Sarawak,2006,748
+Sarawak,2007,940
+Sarawak,2008,956
+Sarawak,2009,1015
+Sarawak,2010,1090
+Sarawak,2011,1083
+Sarawak,2012,1107
+Sarawak,2013,1165
+Sarawak,2014,1188
+Sarawak,2015,1268
+Sarawak,2016,1328
+Sarawak,2017,1466
+Sarawak,2018,1513
+Sarawak,2019,1666
+Selangor,2000,3425
+Selangor,2001,3130
+Selangor,2002,3345
+Selangor,2003,3538
+Selangor,2004,3709
+Selangor,2005,3728
+Selangor,2006,3776
+Selangor,2007,3814
+Selangor,2008,3889
+Selangor,2009,3926
+Selangor,2010,4063
+Selangor,2011,4143
+Selangor,2012,4323
+Selangor,2013,4563
+Selangor,2014,4594
+Selangor,2015,4675
+Selangor,2016,4807
+Selangor,2017,4842
+Selangor,2018,4856
+Selangor,2019,4932
+Terengganu,2000,334
+Terengganu,2001,349
+Terengganu,2002,369
+Terengganu,2003,387
+Terengganu,2004,399
+Terengganu,2005,424
+Terengganu,2006,465
+Terengganu,2007,525
+Terengganu,2008,547
+Terengganu,2009,567
+Terengganu,2010,612
+Terengganu,2011,599
+Terengganu,2012,623
+Terengganu,2013,617
+Terengganu,2014,598
+Terengganu,2015,603
+Terengganu,2016,640
+Terengganu,2017,641
+Terengganu,2018,627
+Terengganu,2019,632
+W.P.Labuan,2000,30
+W.P.Labuan,2001,33.8
+W.P.Labuan,2002,33.6
+W.P.Labuan,2003,33.5
+W.P.Labuan,2004,35.2
+W.P.Labuan,2005,37
+W.P.Labuan,2006,35
+W.P.Labuan,2007,46
+W.P.Labuan,2008,47
+W.P.Labuan,2009,48
+W.P.Labuan,2010,49
+W.P.Labuan,2011,54
+W.P.Labuan,2012,59
+W.P.Labuan,2013,64
+W.P.Labuan,2014,69
+W.P.Labuan,2015,73
+W.P.Labuan,2016,72
+W.P.Labuan,2017,71
+W.P.Labuan,2018,74
+W.P.Labuan,2019,76
