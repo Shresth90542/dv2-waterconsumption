@@ -1,43 +1,51 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "title": "Domestic Share (%) by State",
+  "title": "Domestic Share of Consumption (%) by State",
   "width": 1000,
   "height": 520,
   "projection": {"type": "mercator"},
   "params": [
-    {"name": "year", "value": 2019, "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}}
+    {
+      "name": "year",
+      "value": 2019,
+      "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}
+    }
   ],
   "data": {
-    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
-    "format": {"type": "csv"}
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/refs/heads/main/malaysia.state.geojson",
+    "format": {"type": "json"}
   },
   "transform": [
-    {"calculate": "year(toDate(datum.date))", "as": "Year"},
     {
-      "calculate": "datum.state==='Melaka' ? 'Malacca' : datum.state==='Pulau Pinang' ? 'Penang' : datum.state==='W.P. Labuan' ? 'Labuan' : datum.state",
+      "calculate": "datum.properties.name || datum.properties.NAME_1 || datum.properties.State || datum.properties.NAME || datum.properties.state",
+      "as": "JoinNameRaw"
+    },
+    {
+      "calculate": "JoinNameRaw==='Malacca' ? 'Melaka' : JoinNameRaw==='Penang' ? 'Pulau Pinang' : JoinNameRaw==='Labuan' ? 'W.P. Labuan' : JoinNameRaw",
       "as": "JoinName"
     },
-    {"filter": "datum.Year == year && datum.JoinName != 'Malaysia'"},
-    {"calculate": "lower(datum.sector)", "as": "sector_lc"},
-    {
-      "pivot": "sector_lc",
-      "value": "value",
-      "groupby": ["JoinName"],
-      "op": "sum"
-    },
-    {"calculate": "(datum.domestic + datum.nondomestic)", "as": "TotalCons"},
-    {"calculate": "datum.TotalCons == 0 ? null : datum.domestic / datum.TotalCons * 100", "as": "DomesticPct"},
     {
       "lookup": "JoinName",
       "from": {
-        "data": {
-          "url": "https://gist.github.com/heiswayi/81a169ab39dcf749c31a.js",
-          "format": {"type": "json"}
-        },
-        "key": "properties.name",
-        "fields": ["type", "properties", "geometry"]
+        "data": {"url": "water_consumption.csv", "format": {"type": "csv"}},
+        "key": "state",
+        "fields": ["state", "sector", "date", "value"]
       }
-    }
+    },
+    {"calculate": "year(toDate(datum.date))", "as": "CSVYear"},
+    {"filter": "CSVYear == year"},
+    {"calculate": "lower(datum.sector)", "as": "sector_lc"},
+    {
+      "aggregate": [{"op": "sum", "field": "value", "as": "sum_value"}],
+      "groupby": ["JoinName", "sector_lc"]
+    },
+    {
+      "pivot": "sector_lc",
+      "value": "sum_value",
+      "groupby": ["JoinName"]
+    },
+    {"calculate": "(datum.domestic + datum.nondomestic)", "as": "TotalCons"},
+    {"calculate": "datum.TotalCons==0 ? null : datum.domestic/datum.TotalCons*100", "as": "DomesticPct"}
   ],
   "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.6},
   "encoding": {
@@ -45,15 +53,14 @@
     "color": {
       "field": "DomesticPct",
       "type": "quantitative",
-      "title": "Domestic share (%)",
       "scale": {"scheme": "tealblues"},
-      "legend": {"format": ".0f"}
+      "title": "Domestic share (%)"
     },
     "tooltip": [
       {"field": "JoinName", "title": "State"},
-      {"field": "DomesticPct", "type": "quantitative", "title": "Domestic share (%)", "format": ".1f"},
-      {"field": "domestic", "type": "quantitative", "title": "Domestic (MLD)"},
-      {"field": "nondomestic", "type": "quantitative", "title": "Non-domestic (MLD)"}
+      {"field": "DomesticPct", "title": "Domestic share (%)", "format": ".1f"},
+      {"field": "domestic", "title": "Domestic (MLD)", "format": ".0f"},
+      {"field": "nondomestic", "title": "Non-domestic (MLD)", "format": ".0f"}
     ]
   }
 }
