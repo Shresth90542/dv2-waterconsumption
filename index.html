@@ -10,153 +10,37 @@
   <style>
     :root { --maxw: 1100px; }
     body { margin: 24px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    h1 { margin: 0 0 6px; }
-    h2 { margin: 24px 0 8px; }
+    h1 { margin: 0 0 8px; }
+    h2 { margin: 28px 0 8px; }
     .wrap { max-width: var(--maxw); }
-    .chart { margin: 12px 0 28px; }
-    .two-col { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    @media (min-width: 960px) { .two-col { grid-template-columns: 1fr 1fr; } }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    @media (min-width: 1024px){ .grid { grid-template-columns: 1fr 1fr; } }
+    .chart { margin: 6px 0 16px; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Malaysia Water: Production & Consumption by State</h1>
+
+    <h2>1) Water Production by State (map)</h2>
     <div id="map" class="chart"></div>
 
-    <div class="two-col">
+    <div class="grid">
       <div>
-        <h2>Sectoral Water Consumption by State</h2>
+        <h2>2) Sectoral Water Consumption by State (stacked bars)</h2>
         <div id="bars" class="chart"></div>
       </div>
       <div>
-        <h2>Production vs Total Consumption</h2>
+        <h2>3) Production vs Total Consumption (scatter)</h2>
         <div id="scatter" class="chart"></div>
       </div>
     </div>
   </div>
 
   <script>
-    const GEO =
-      "https://raw.githubusercontent.com/wmgeolab/geoBoundaries/main/releaseData/gbOpen/MYS/ADM1/geoBoundaries-MYS-ADM1.geojson";
-    const PROD =
-      "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv";
-    const CONS =
-      "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv";
-
-    // -------------------------
-    // 1) MAP — PRODUCTION BY STATE
-    // -------------------------
-    const mapSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 950, "height": 560, "projection": {"type": "mercator"},
-      "params": [{"name":"yrMap","value":2019,"bind":{"input":"range","min":2000,"max":2019,"step":1}}],
-      "data": {"url": GEO, "format": {"type": "geojson"}},
-      "transform": [
-        { "calculate":
-          "isDefined(datum.properties.shapeName) ? datum.properties.shapeName : (isDefined(datum.properties.name) ? datum.properties.name : '')",
-          "as": "geo_name"
-        },
-        { "lookup": "geo_name",
-          "from": { "data": { "values": [
-              {"geo":"Penang","csv":"Pulau Pinang"},
-              {"geo":"Malacca","csv":"Melaka"},
-              {"geo":"Kuala Lumpur","csv":"W.P. Kuala Lumpur"},
-              {"geo":"Labuan","csv":"W.P.Labuan"},
-              {"geo":"Putrajaya","csv":"W.P. Putrajaya"},
-              {"geo":"Wilayah Persekutuan Kuala Lumpur","csv":"W.P. Kuala Lumpur"},
-              {"geo":"Wilayah Persekutuan Labuan","csv":"W.P.Labuan"},
-              {"geo":"Wilayah Persekutuan Putrajaya","csv":"W.P. Putrajaya"}
-            ]}, "key":"geo", "fields":["csv"] },
-          "as":"mapped_csv_name"
-        },
-        { "calculate": "isValid(datum.mapped_csv_name) ? datum.mapped_csv_name : datum.geo_name", "as":"state_key" },
-        { "lookup": "state_key",
-          "from": { "data": { "url": PROD, "format":{"type":"csv"} },
-                    "key":"State",
-                    "fields":["State","Year","Value (Million litres per day)"] }
-        },
-        { "filter": "datum.Year == yrMap" }
-      ],
-      "mark": {"type":"geoshape","stroke":"#fff","strokeWidth":0.7},
-      "encoding": {
-        "color": {
-          "field": "Value (Million litres per day)", "type":"quantitative",
-          "title": "Water Production (MLD)", "scale":{"scheme":"blues"}
-        },
-        "tooltip": [
-          {"field":"state_key","type":"nominal","title":"State"},
-          {"field":"Value (Million litres per day)","type":"quantitative","title":"Production (MLD)"},
-          {"field":"Year","type":"ordinal","title":"Year"}
-        ]
-      }
-    };
-
-    // -------------------------
-    // 2) STACKED BARS — CONSUMPTION BY SECTOR
-    // -------------------------
-    const barsSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 520, "height": 520,
-      "data": {"url": CONS, "format": {"type": "csv"}},
-      "params": [{"name":"yrBars","value":2019,"bind":{"input":"range","min":2003,"max":2022,"step":1}}],
-      "transform": [
-        // robust year extraction from 'date' string (last 4 chars)
-        {"calculate": "toNumber(substring(datum.date, length(datum.date)-4, 4))", "as": "Year"},
-        {"filter": "datum.Year == yrBars"},
-        {"calculate": "lower(datum.sector)", "as": "sector_lc"},
-        {"calculate": "datum.sector_lc=='nondomestic' ? 'Non-domestic' : (datum.sector_lc=='domestic' ? 'Domestic' : datum.sector)", "as": "sector_clean"},
-        {"aggregate": [{"op":"sum","field":"value","as":"amount"}], "groupby": ["state","sector_clean","Year"]},
-        {"joinaggregate": [{"op":"sum","field":"amount","as":"total_state"}], "groupby":["state"]}
-      ],
-      "mark": {"type":"bar"},
-      "encoding": {
-        "y": {"field":"state","type":"nominal","sort":{"field":"total_state","order":"descending"},"title":"State"},
-        "x": {"aggregate":"sum","field":"amount","type":"quantitative","title":"Consumption (MLD)"},
-        "color": {"field":"sector_clean","type":"nominal","title":"Sector"},
-        "tooltip": [
-          {"field":"state","type":"nominal"},
-          {"field":"sector_clean","type":"nominal","title":"Sector"},
-          {"aggregate":"sum","field":"amount","type":"quantitative","title":"Sector consumption (MLD)"},
-          {"field":"Year","type":"ordinal"}
-        ]
-      }
-    };
-
-    // -------------------------
-    // 3) SCATTER — PRODUCTION VS TOTAL CONSUMPTION
-    // -------------------------
-    const scatterSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 520, "height": 520,
-      "data": {"url": CONS, "format": {"type":"csv"}},
-      "params": [{"name":"yrSc","value":2019,"bind":{"input":"range","min":2003,"max":2022,"step":1}}],
-      "transform": [
-        {"calculate": "toNumber(substring(datum.date, length(datum.date)-4, 4))", "as": "Year"},
-        {"filter": "datum.Year == yrSc"},
-        {"aggregate": [{"op":"sum","field":"value","as":"total_cons"}], "groupby": ["state","Year"]},
-        {"calculate": "datum.state=='W.P. Labuan' ? 'W.P.Labuan' : (datum.state=='Penang' ? 'Pulau Pinang' : (datum.state=='Malacca' ? 'Melaka' : datum.state))", "as": "state_for_prod"},
-        {"lookup":"state_for_prod",
-         "from":{"data":{"url":PROD,"format":{"type":"csv"}},
-                 "key":"State",
-                 "fields":["State","Year","Value (Million litres per day)"]}},
-        {"filter":"datum.Year == yrSc"}
-      ],
-      "mark": {"type": "point"},
-      "encoding": {
-        "x": {"field":"Value (Million litres per day)","type":"quantitative","title":"Production (MLD)"},
-        "y": {"field":"total_cons","type":"quantitative","title":"Total consumption (MLD)"},
-        "tooltip": [
-          {"field":"state","type":"nominal","title":"State"},
-          {"field":"Value (Million litres per day)","type":"quantitative","title":"Production (MLD)"},
-          {"field":"total_cons","type":"quantitative","title":"Total consumption (MLD)"},
-          {"field":"Year","type":"ordinal","title":"Year"}
-        ]
-      }
-    };
-
-    vegaEmbed('#map', mapSpec, {actions:false});
-    vegaEmbed('#bars', barsSpec, {actions:false});
-    vegaEmbed('#scatter', scatterSpec, {actions:false});
+    vegaEmbed("#map", "map.json", {actions:false});
+    vegaEmbed("#bars", "bars.json", {actions:false});
+    vegaEmbed("#scatter", "scatter.json", {actions:false});
   </script>
 </body>
 </html>
