@@ -7,14 +7,12 @@
     {"name": "yrMap", "value": 2019, "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}}
   ],
   "data": {
-    "url": "https://raw.githubusercontent.com/wmgeolab/geoBoundaries/main/releaseData/gbOpen/MYS/ADM1/geoBoundaries-MYS-ADM1.geojson",
-    "format": {"type": "geojson"}
+    "url": "https://gist.githubusercontent.com/heiswayi/81a169ab39dcf749c31a/raw/b2b3685f5205aee7c35f0b543201907660fac55e/malaysia.geojson",
+    "format": {"type": "json", "property": "features"}
   },
   "transform": [
     {
-      "calculate":
-        "(datum.properties && datum.properties.shapeName) ? datum.properties.shapeName : " +
-        "((datum.properties && datum.properties.name) ? datum.properties.name : '')",
+      "calculate": "datum.properties.name",
       "as": "geo_name"
     },
     {
