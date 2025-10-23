@@ -5,38 +5,28 @@
   "height": 560,
   "data": {
     "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
-    "format": {"type": "csv"}
+    "format": { "type": "csv" }
   },
   "params": [
-    {
-      "name": "year",
-      "value": 2019,
-      "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}
-    }
+    { "name": "year", "value": 2019, "bind": { "input": "range", "min": 2003, "max": 2022, "step": 1 } }
   ],
   "transform": [
-    {"calculate": "year(toDate(datum.date))", "as": "Year"},
-    {"filter": "datum.state != 'Malaysia' && datum.Year == year"},
-    {"calculate": "lower(datum.sector)", "as": "sector_lc"},
+    { "calculate": "year(toDate(datum.date))", "as": "Year" },
+    { "filter": "datum.state != 'Malaysia' && datum.Year == year" },
+    { "calculate": "lower(datum.sector)", "as": "sector_lc" },
     {
       "calculate": "datum.sector_lc == 'nondomestic' ? 'Non-domestic' : (datum.sector_lc == 'domestic' ? 'Domestic' : datum.sector)",
       "as": "Sector"
     },
-    {
-      "aggregate": [{"op": "sum", "field": "value", "as": "Amount"}],
-      "groupby": ["state", "Sector"]
-    },
-    {
-      "joinaggregate": [{"op": "sum", "field": "Amount", "as": "StateTotal"}],
-      "groupby": ["state"]
-    }
+    { "aggregate": [{ "op": "sum", "field": "value", "as": "Amount" }], "groupby": ["state", "Sector"] },
+    { "joinaggregate": [{ "op": "sum", "field": "Amount", "as": "StateTotal" }], "groupby": ["state"] }
   ],
-  "mark": {"type": "bar"},
+  "mark": { "type": "bar" },
   "encoding": {
     "y": {
       "field": "state",
       "type": "nominal",
-      "sort": {"field": "StateTotal", "order": "descending"},
+      "sort": { "field": "StateTotal", "order": "descending" },
       "title": "State"
     },
     "x": {
@@ -45,18 +35,16 @@
       "type": "quantitative",
       "title": "Consumption (MLD)"
     },
-    "color": {"field": "Sector", "type": "nominal", "title": "Sector"},
+    "color": {
+      "field": "Sector",
+      "type": "nominal",
+      "title": "Sector"
+    },
     "tooltip": [
-      {"field": "state", "type": "nominal", "title": "State"},
-      {"field": "Sector", "type": "nominal", "title": "Sector"},
-      {
-        "aggregate": "sum",
-        "field": "Amount",
-        "type": "quantitative",
-        "title": "Sector consumption (MLD)"
-      },
-      {"field": "Year", "type": "ordinal", "title": "Year"}
+      { "field": "state", "type": "nominal", "title": "State" },
+      { "field": "Sector", "type": "nominal", "title": "Sector" },
+      { "aggregate": "sum", "field": "Amount", "type": "quantitative", "title": "Sector consumption (MLD)" },
+      { "field": "Year", "type": "ordinal", "title": "Year" }
     ]
-  },
-  "config": {}
+  }
 }
