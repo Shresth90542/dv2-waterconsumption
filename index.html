@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Malaysia Water Production and Consumption</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <h1>Malaysia Water Production (2000–2019)</h1>
+  <div id="vis"></div>
+
+  <script>
+    const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 700,
+      "height": 500,
+      "projection": {"type": "mercator"},
+      "params": [
+        {"name": "year", "value": 2019, "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}}
+      ],
+      "data": {
+        "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/malaysia-states.json",
+        "format": {"type": "json", "property": "features"}
+      },
+      "transform": [
+        {
+          "lookup": "properties.name",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/m-20210316115111_202103221134150_production-of-water-supplied-by-state-malaysia-2000-2019.csv",
+              "format": {"type": "csv"}
+            },
+            "key": "State",
+            "fields": ["Year", "Value"]
+          }
+        },
+        {"filter": "datum.Year == year"}
+      ],
+      "mark": {"type": "geoshape", "stroke": "#fff"},
+      "encoding": {
+        "color": {
+          "field": "Value",
+          "type": "quantitative",
+          "title": "Water production (MLD)",
+          "scale": {"scheme": "blues"}
+        },
+        "tooltip": [
+          {"field": "properties.name", "type": "nominal", "title": "State"},
+          {"field": "Value", "type": "quantitative"}
+        ]
+      }
+    };
+
+    vegaEmbed('#vis', spec, {"actions": false});
+  </script>
+</body>
+</html>
