@@ -4,27 +4,49 @@
   <meta charset="utf-8" />
   <title>Malaysia Water Visualisations</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Vega Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
   <style>
     :root { --maxw: 1100px; }
-    body { margin: 28px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    .wrap { max-width: var(--maxw); }
-    h1 { margin: 0 0 10px; }
-    .chart { margin: 10px 0 36px; }
+    body {
+      margin: 28px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #111;
+      background: #fafafa;
+    }
+    .wrap { max-width: var(--maxw); margin: 0 auto; }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    h2 { margin: 32px 0 10px; font-size: 22px; }
+    .chart { margin-bottom: 48px; }
+    .note { color: #666; font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Malaysia Water: Production & Consumption</h1>
+    <p class="note">
+      Data sources: 
+      <code>water_production_2000_2019.csv</code> & 
+      <code>water_consumption.csv</code>
+    </p>
+
+    <!-- Chart 1 -->
     <h2>1) National Water Production (2000–2019)</h2>
     <div id="line" class="chart"></div>
+
+    <!-- Chart 2 -->
+    <h2>2) Sectoral Water Consumption by State</h2>
+    <div id="bar" class="chart"></div>
   </div>
 
   <script>
-    // IMPORTANT: this must match your file name exactly
+    // Embed the charts — filenames must match exactly
     vegaEmbed('#line', 'linechart.json', { actions: false }).catch(console.error);
+    vegaEmbed('#bar', 'bar.json', { actions: false }).catch(console.error);
   </script>
 </body>
 </html>
