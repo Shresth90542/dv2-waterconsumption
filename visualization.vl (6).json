@@ -1,0 +1,94 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": "Change in Total Water Consumption by State — Compare Two Years",
+  "width": 900,
+  "height": 640,
+  "data": {
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
+    "format": {"type": "csv"}
+  },
+  "params": [
+    {
+      "name": "yearA",
+      "value": 2019,
+      "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}
+    },
+    {
+      "name": "yearB",
+      "value": 2022,
+      "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}
+    }
+  ],
+  "transform": [
+    {"calculate": "year(toDate(datum.date))", "as": "Year"},
+    {"filter": "datum.state != 'Malaysia'"},
+    {
+      "aggregate": [{"op": "sum", "field": "value", "as": "Total"}],
+      "groupby": ["state", "Year"]
+    },
+    {"filter": "datum.Year == yearA || datum.Year == yearB"},
+    {
+      "joinaggregate": [
+        {"op": "min", "field": "Total", "as": "MinVal"},
+        {"op": "max", "field": "Total", "as": "MaxVal"}
+      ],
+      "groupby": ["state"]
+    },
+    {"calculate": "datum.MaxVal - datum.MinVal", "as": "Diff"},
+    {
+      "calculate": "datum.Year == yearA ? 'Year A' : 'Year B'",
+      "as": "YearLabel"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {"type": "rule", "stroke": "#9ca3af", "strokeWidth": 2},
+      "encoding": {
+        "y": {
+          "field": "state",
+          "type": "nominal",
+          "sort": {"field": "Diff", "order": "descending"},
+          "title": "State"
+        },
+        "x": {
+          "field": "MinVal",
+          "type": "quantitative",
+          "title": "Total Consumption (MLD)"
+        },
+        "x2": {"field": "MaxVal"}
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 80},
+      "encoding": {
+        "y": {
+          "field": "state",
+          "type": "nominal",
+          "sort": {"field": "Diff", "order": "descending"}
+        },
+        "x": {"field": "Total", "type": "quantitative"},
+        "color": {
+          "field": "YearLabel",
+          "type": "nominal",
+          "scale": {"range": ["#2563eb", "#10b981"]},
+          "title": {"text": "Selected Years", "subtitle": "Use sliders above"}
+        },
+        "tooltip": [
+          {"field": "state", "title": "State"},
+          {"field": "Year", "title": "Year"},
+          {
+            "field": "Total",
+            "type": "quantitative",
+            "title": "Consumption (MLD)"
+          },
+          {"field": "Diff", "type": "quantitative", "title": "Change (MLD)"}
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "axis": {"domainColor": "#e5e7eb", "tickColor": "#e5e7eb"},
+    "legend": {"orient": "top-left"}
+  }
+}
