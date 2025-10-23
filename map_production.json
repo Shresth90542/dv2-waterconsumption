@@ -1,35 +1,40 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "title": "Production (MLD) by State",
+  "title": "Water Production (MLD) by State",
   "width": 1000,
   "height": 520,
   "projection": {"type": "mercator"},
   "params": [
-    {"name": "year", "value": 2019, "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}}
+    {
+      "name": "year",
+      "value": 2019,
+      "bind": {"input": "range", "min": 2000, "max": 2019, "step": 1}
+    }
   ],
   "data": {
-    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv",
-    "format": {"type": "csv"}
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/refs/heads/main/malaysia.state.geojson",
+    "format": {"type": "json"}
   },
   "transform": [
-    {"calculate": "toNumber(datum.Year)", "as": "YearNum"},
-    {"calculate": "toNumber(datum['Value (Million litres per day)'])", "as": "ProdMLD"},
     {
-      "calculate": "datum.State==='Melaka' ? 'Malacca' : datum.State==='Pulau Pinang' ? 'Penang' : datum.State==='W.P. Labuan' ? 'Labuan' : datum.State",
+      "calculate": "datum.properties.name || datum.properties.NAME_1 || datum.properties.State || datum.properties.NAME || datum.properties.state",
+      "as": "JoinNameRaw"
+    },
+    {
+      "calculate": "JoinNameRaw==='Malacca' ? 'Melaka' : JoinNameRaw==='Penang' ? 'Pulau Pinang' : JoinNameRaw==='Labuan' ? 'W.P. Labuan' : JoinNameRaw",
       "as": "JoinName"
     },
-    {"filter": "datum.YearNum == year && datum.JoinName != 'Malaysia'"},
     {
       "lookup": "JoinName",
       "from": {
-        "data": {
-          "url": "https://gist.githubusercontent.com/heiswayi/8a9b39dcf749c31a/raw/b2b83685f5205aee7c35f0b543201907660fac55e/malaysia.geojson",
-          "format": {"type": "json"}
-        },
-        "key": "properties.name",
-        "fields": ["type", "properties", "geometry"]
+        "data": {"url": "water_production_2000_2019.csv", "format": {"type": "csv"}},
+        "key": "State",
+        "fields": ["Year", "Value (Million litres per day)"]
       }
-    }
+    },
+    {"calculate": "toNumber(datum['Value (Million litres per day)'])", "as": "ProdMLD"},
+    {"calculate": "toNumber(datum.Year)", "as": "CSVYear"},
+    {"filter": "CSVYear == year"}
   ],
   "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.6},
   "encoding": {
@@ -42,8 +47,8 @@
     },
     "tooltip": [
       {"field": "JoinName", "title": "State"},
-      {"field": "YearNum", "title": "Year"},
-      {"field": "ProdMLD", "type": "quantitative", "title": "Production (MLD)"}
+      {"field": "CSVYear", "title": "Year"},
+      {"field": "ProdMLD", "title": "Production (MLD)", "format": ".0f"}
     ]
   }
 }
