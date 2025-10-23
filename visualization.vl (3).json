@@ -1,0 +1,71 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": "Water Production vs Consumption by State",
+  "width": 600,
+  "height": 520,
+  "data": {
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
+    "format": {"type": "csv"}
+  },
+  "params": [
+    {
+      "name": "year",
+      "value": 2019,
+      "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}
+    }
+  ],
+  "transform": [
+    {"calculate": "year(toDate(datum.date))", "as": "Year"},
+    {"filter": "datum.state != 'Malaysia' && datum.Year == year"},
+    {
+      "aggregate": [{"op": "sum", "field": "value", "as": "TotalConsumption"}],
+      "groupby": ["state"]
+    },
+    {
+      "lookup": "state",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_production_2000_2019.csv",
+          "format": {"type": "csv"}
+        },
+        "key": "State",
+        "fields": ["Year", "Value (Million litres per day)"]
+      }
+    },
+    {
+      "calculate": "toNumber(datum['Value (Million litres per day)'])",
+      "as": "Production"
+    },
+    {"calculate": "toNumber(datum.TotalConsumption)", "as": "Consumption"},
+    {"filter": "isValid(datum.Production) && isValid(datum.Consumption)"}
+  ],
+  "mark": {"type": "point", "filled": true, "opacity": 0.8, "size": 100},
+  "encoding": {
+    "x": {
+      "field": "Production",
+      "type": "quantitative",
+      "title": "Water Production (Million L/day)"
+    },
+    "y": {
+      "field": "Consumption",
+      "type": "quantitative",
+      "title": "Water Consumption (Million L/day)"
+    },
+    "color": {"field": "state", "type": "nominal", "title": "State"},
+    "tooltip": [
+      {"field": "state", "type": "nominal", "title": "State"},
+      {
+        "field": "Production",
+        "type": "quantitative",
+        "title": "Production (MLD)"
+      },
+      {
+        "field": "Consumption",
+        "type": "quantitative",
+        "title": "Consumption (MLD)"
+      },
+      {"field": "year", "type": "ordinal", "title": "Year"}
+    ]
+  },
+  "config": {}
+}
