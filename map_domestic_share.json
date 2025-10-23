@@ -1,0 +1,59 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": "Domestic Share of Water Consumption by State (%)",
+  "width": 900,
+  "height": 520,
+  "projection": {"type": "mercator"},
+  "params": [
+    {"name": "year", "value": 2019, "bind": {"input": "range", "min": 2003, "max": 2022, "step": 1}}
+  ],
+  "data": {
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "year(toDate(datum.date))", "as": "Year"},
+    {
+      "calculate": "replace(replace(datum.state,'W.P. Labuan','Labuan'),'Pulau Pinang','Pulau Pinang')",
+      "as": "state_norm"
+    },
+    {"filter": "datum.Year == year && datum.state_norm != 'Malaysia'"},
+    {"calculate": "lower(datum.sector)", "as": "sector_lc"},
+    {
+      "pivot": "sector_lc",
+      "value": "value",
+      "groupby": ["state_norm"],
+      "op": "sum"
+    },
+    {"calculate": "(datum.domestic + datum.nondomestic)", "as": "TotalCons"},
+    {"calculate": "datum.TotalCons == 0 ? null : datum.domestic / datum.TotalCons * 100", "as": "DomesticPct"},
+    {
+      "lookup": "state_norm",
+      "from": {
+        "data": {
+          "url": "https://gist.githubusercontent.com/heiswayi/8a9b39dcf749c31a/raw/b2b83685f5205aee7c35f0b543201907660fac55e/malaysia.geojson",
+          "format": {"type": "json"}
+        },
+        "key": "properties.name",
+        "fields": ["type", "properties", "geometry"]
+      }
+    }
+  ],
+  "mark": {"type": "geoshape", "stroke": "#fff", "strokeWidth": 0.5},
+  "encoding": {
+    "shape": {"field": "geometry", "type": "geojson"},
+    "color": {
+      "field": "DomesticPct",
+      "type": "quantitative",
+      "title": "Domestic share (%)",
+      "scale": {"scheme": "tealblues"},
+      "legend": {"format": ".0f"}
+    },
+    "tooltip": [
+      {"field": "state_norm", "title": "State"},
+      {"field": "DomesticPct", "type": "quantitative", "title": "Domestic share (%)", "format": ".1f"},
+      {"field": "domestic", "type": "quantitative", "title": "Domestic (MLD)"},
+      {"field": "nondomestic", "type": "quantitative", "title": "Non-domestic (MLD)"}
+    ]
+  }
+}
