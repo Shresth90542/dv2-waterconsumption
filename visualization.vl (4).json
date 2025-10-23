@@ -1,0 +1,48 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": "Total Malaysia Water Consumption by Sector (2003–2022)",
+  "width": 900,
+  "height": 400,
+  "data": {
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/main/water_consumption.csv",
+    "format": {"type": "csv"}
+  },
+  "transform": [
+    {"calculate": "year(toDate(datum.date))", "as": "Year"},
+    {"filter": "datum.state == 'Malaysia'"},
+    {
+      "calculate": "datum.sector == 'domestic' ? 'Domestic' : 'Non-domestic'",
+      "as": "Sector"
+    },
+    {
+      "aggregate": [{"op": "sum", "field": "value", "as": "TotalConsumption"}],
+      "groupby": ["Year", "Sector"]
+    },
+    {"filter": "isValid(datum.Year)"}
+  ],
+  "mark": {"type": "area", "line": true, "opacity": 0.8},
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": {"labelAngle": 0, "tickCount": 20}
+    },
+    "y": {
+      "field": "TotalConsumption",
+      "type": "quantitative",
+      "title": "Total Consumption (MLD)"
+    },
+    "color": {"field": "Sector", "type": "nominal", "title": "Sector"},
+    "tooltip": [
+      {"field": "Year", "type": "ordinal"},
+      {"field": "Sector", "type": "nominal"},
+      {
+        "field": "TotalConsumption",
+        "type": "quantitative",
+        "title": "Consumption (MLD)"
+      }
+    ]
+  },
+  "config": {}
+}
