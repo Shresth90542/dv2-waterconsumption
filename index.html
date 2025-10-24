@@ -5,7 +5,7 @@
   <title>Malaysia Water — Production & Consumption Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Font -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Vega libraries -->
@@ -18,7 +18,7 @@
 </head>
 <body>
   <header class="masthead">
-    <div class="container masthead__inner">
+    <div class="wrap masthead__inner">
       <div class="masthead__titles">
         <h1>Malaysia Water — Production &amp; Consumption</h1>
         <p class="subtitle">Trends, sectoral mix, state comparisons &amp; geospatial patterns (2000–2022)</p>
@@ -27,39 +27,46 @@
     </div>
   </header>
 
-  <main class="container">
+  <main class="wrap">
 
-    <!-- 1) Map first -->
+    <!-- 1) Map -->
     <section class="card">
       <h2 class="chart-heading">1) Total Water Consumption by State (Map)</h2>
       <div id="map_totals" class="viz viz--lg"></div>
       <p class="chart-desc">
-        The choropleth map visualises the total daily water consumption (MLD) for each Malaysian state.
-        Darker shades indicate higher overall usage, with <strong>Selangor</strong> leading significantly due to its
-        population density and industrial concentration. In contrast, <strong>Perlis</strong> and <strong>Labuan</strong>
-        exhibit lower demand, highlighting geographic disparities in water utilisation.
+        The choropleth map provides a state-level overview of total daily water consumption across Malaysia.
+        <strong>Selangor</strong> stands out with the highest usage, reflecting its dense population and industrial activity.
+        States such as <strong>Johor</strong>, <strong>Perak</strong>, and <strong>Penang</strong> also report elevated consumption,
+        while smaller or less urbanised regions like <strong>Perlis</strong> and <strong>Labuan</strong> show lower totals.
+        The gradient of shades reveals the spatial disparity in water use — denser, more industrialised regions drive national demand,
+        underscoring the importance of localised resource management strategies.
       </p>
     </section>
 
-    <!-- 2) National production -->
+    <!-- 2) National Production -->
     <section class="card">
       <h2 class="chart-heading">2) National Water Production (2000–2019)</h2>
       <div id="line" class="viz"></div>
       <p class="chart-desc">
-        National production rose from ~<strong>10,000 MLD</strong> in 2000 to over <strong>17,000 MLD</strong> in 2019,
-        indicating steady expansion of supply capacity. Minor year-to-year changes align with infrastructure upgrades
-        and demand growth.
+        This time series tracks Malaysia’s national water production over two decades. 
+        From 2000 to 2019, production increased from roughly <strong>10,000 MLD</strong> to over <strong>17,000 MLD</strong>,
+        representing a steady upward trajectory aligned with population and economic growth.
+        The smooth trend suggests consistent infrastructural development, with minor dips corresponding to seasonal fluctuations
+        and operational maintenance periods. Overall, the pattern indicates Malaysia’s expanding capacity to meet rising consumption needs.
       </p>
     </section>
 
-    <!-- 3–4) Two cards side-by-side on wide screens -->
-    <section class="grid-2">
+    <!-- 3 & 4 side by side -->
+    <section class="grid grid-2">
       <div class="card">
         <h2 class="chart-heading">3) Sectoral Water Consumption by State</h2>
         <div id="bars" class="viz viz--sm"></div>
         <p class="chart-desc">
-          A comparison of <strong>domestic</strong> vs <strong>non-domestic</strong> demand by state.
-          Selangor dominates total usage; Johor and Perak follow with more balanced sector splits.
+          This stacked bar chart compares <strong>domestic</strong> and <strong>non-domestic</strong> water usage across all states.
+          The results reveal that household consumption remains dominant nationwide, especially in heavily populated areas like Selangor and Johor.
+          However, states with strong industrial or tourism sectors — such as <strong>Penang</strong> and <strong>Melaka</strong> —
+          display a more balanced distribution between domestic and non-domestic use. 
+          This breakdown underscores how population density and economic activities jointly shape water demand.
         </p>
       </div>
 
@@ -67,61 +74,74 @@
         <h2 class="chart-heading">4) Water Production vs Total Consumption</h2>
         <div id="scatter" class="viz viz--sm"></div>
         <p class="chart-desc">
-          Points near the diagonal indicate supply ≈ demand. States above the line suggest surplus production,
-          while those below may face tighter supply relative to consumption.
+          The scatter plot compares each state’s water production with its total consumption for a given year.
+          States positioned along the diagonal reflect near-equilibrium between supply and demand.
+          Those above the line, like <strong>Perak</strong>, produce more water than they consume — indicating potential supply surpluses or export to neighbouring states.
+          Conversely, states below the line, such as <strong>Kedah</strong>, show higher demand than local production, signalling dependency on external sources.
+          This relationship provides insight into regional efficiency and distribution planning.
         </p>
       </div>
     </section>
 
+    <!-- 5) Area -->
     <section class="card">
       <h2 class="chart-heading">5) Malaysia Consumption by Sector (2003–2022)</h2>
       <div id="area" class="viz"></div>
       <p class="chart-desc">
-        Domestic use remains the largest component. Non-domestic consumption has grown since 2010,
-        reflecting industrial and commercial expansion across key regions.
+        The area chart tracks total water consumption divided by sector. 
+        <strong>Domestic use</strong> forms the largest portion throughout the period, 
+        while <strong>non-domestic consumption</strong> shows gradual growth, accelerating after 2010 due to industrialisation and commercial development.
+        This trend illustrates Malaysia’s transition toward a more diversified water-use profile, 
+        where economic growth expands demand beyond residential use.
       </p>
     </section>
 
+    <!-- 6) Trends -->
     <section class="card">
       <h2 class="chart-heading">6) State Consumption Trends (2003–2022)</h2>
       <div id="sparklines" class="viz"></div>
       <p class="chart-desc">
-        Use the dropdown inside the chart to inspect a state’s trend. Most states show gradual growth; <strong>Selangor</strong>
-        records the steepest long-run increase, consistent with population and economic activity.
+        This interactive line chart visualises long-term consumption trends for each state.
+        By selecting a state, users can observe how its water demand has evolved over time.
+        <strong>Selangor</strong> again displays the most rapid and consistent increase, 
+        reflecting both population concentration and industrial expansion.
+        Most other states follow upward trajectories, indicating widespread improvements in water accessibility and infrastructure.
       </p>
     </section>
 
+    <!-- 7) Dumbbell -->
     <section class="card">
       <h2 class="chart-heading">7) Change in Total Consumption — Compare Two Years</h2>
       <div id="dumbbell" class="viz viz--sm"></div>
       <p class="chart-desc">
-        The dumbbell view contrasts two selected years. Longer lines indicate larger shifts in demand;
-        growth is led by <strong>Selangor</strong> and <strong>Johor</strong>.
+        The dumbbell plot enables comparison of water consumption between two selected years.
+        The lines connecting data points show the magnitude and direction of change for each state.
+        States with longer lines, such as <strong>Selangor</strong> and <strong>Johor</strong>, exhibit substantial increases,
+        reflecting sustained economic activity and urban growth. 
+        This view clearly highlights which regions are driving the greatest demand growth across time.
       </p>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <div class="container site-footer__inner">
+    <div class="wrap site-footer__inner">
       <p>
         <strong>Data sources:</strong>
-        <code>state_totals.csv</code>,
-        <code>water_production_2000_2019.csv</code>,
-        <code>water_consumption.csv</code>
+        <code>state_totals.csv</code>, <code>water_production_2000_2019.csv</code>, <code>water_consumption.csv</code>
       </p>
       <p>Prepared by <strong>Shresth Sohaney</strong> (Student ID: <strong>33806314</strong>)</p>
     </div>
   </footer>
 
   <script>
-    vegaEmbed('#map_totals', 'map_totals.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#line', 'linechart.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#bars', 'bars.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#scatter', 'scatter.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#area', 'area.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#sparklines', 'state_sparklines.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#dumbbell', 'change_dumbbell.json', { actions: false, renderer: 'canvas' }).catch(console.error);
+    vegaEmbed('#map_totals', 'map_totals.json', { actions: false }).catch(console.error);
+    vegaEmbed('#line', 'linechart.json', { actions: false }).catch(console.error);
+    vegaEmbed('#bars', 'bars.json', { actions: false }).catch(console.error);
+    vegaEmbed('#scatter', 'scatter.json', { actions: false }).catch(console.error);
+    vegaEmbed('#area', 'area.json', { actions: false }).catch(console.error);
+    vegaEmbed('#sparklines', 'state_sparklines.json', { actions: false }).catch(console.error);
+    vegaEmbed('#dumbbell', 'change_dumbbell.json', { actions: false }).catch(console.error);
   </script>
 </body>
 </html>
