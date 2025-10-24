@@ -1,0 +1,46 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Total Water Consumption by State (MLD)",
+  "width": "container",
+  "height": 520,
+  "projection": {"type": "mercator"},
+  "data": {
+    "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/refs/heads/main/my.json",
+    "format": {"type": "json", "property": "features"}
+  },
+  "transform": [
+    {"calculate": "datum.properties.name", "as": "state"},
+    {
+      "lookup": "state",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/Shresth90542/dv2-waterconsumption/refs/heads/main/state_totals.csv",
+          "format": {"type": "csv"}
+        },
+        "key": "state",
+        "fields": ["value"]
+      }
+    },
+    {"calculate": "toNumber(datum.value)", "as": "TotalMLD"},
+    {"filter": "isValid(datum.TotalMLD)"}
+  ],
+  "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 0.8},
+  "encoding": {
+    "color": {
+      "field": "TotalMLD",
+      "type": "quantitative",
+      "title": "Total (MLD)",
+      "scale": {"scheme": "blues"}
+    },
+    "tooltip": [
+      {"field": "state", "type": "nominal", "title": "State"},
+      {
+        "field": "TotalMLD",
+        "type": "quantitative",
+        "title": "Total (MLD)",
+        "format": ",.0f"
+      }
+    ]
+  },
+  "config": {}
+}
