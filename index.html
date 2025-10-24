@@ -32,7 +32,7 @@
     <!-- 1) Map -->
     <section class="card">
       <h2 class="chart-heading">1) Total Water Consumption by State (Map)</h2>
-      <div id="map_totals" class="viz viz--lg"></div>
+      <div id="map_state_totals" class="viz viz--lg"></div>
       <p class="chart-desc">
         The choropleth map provides a state-level overview of total daily water consumption across Malaysia.
         <strong>Selangor</strong> stands out with the highest usage, reflecting its dense population and industrial activity.
@@ -135,7 +135,7 @@
   </footer>
 
   <script>
-    vegaEmbed('#map_totals', 'map_totals.json', { actions: false }).catch(console.error);
+    vegaEmbed('#map_totals', 'map_state_totals.json', { actions: false }).catch(console.error);
     vegaEmbed('#line', 'linechart.json', { actions: false }).catch(console.error);
     vegaEmbed('#bars', 'bars.json', { actions: false }).catch(console.error);
     vegaEmbed('#scatter', 'scatter.json', { actions: false }).catch(console.error);
