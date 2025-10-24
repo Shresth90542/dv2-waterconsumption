@@ -12,16 +12,6 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
-
-  <!-- Small, centered charts -->
-  <style>
-    .viz { max-width: 900px; height: 340px; margin: 0 auto; }
-    /* Make the map a bit taller than others for readability */
-    #map_total { height: 420px; }
-    /* Keep cards visually consistent even with smaller charts */
-    .card.card--equal { padding-bottom: 8px; }
-    .grid.grid-2 .viz { height: 320px; }
-  </style>
 </head>
 <body>
   <header class="masthead">
@@ -35,8 +25,7 @@
   </header>
 
   <main class="wrap">
-
-    <!-- 1) Map first -->
+    <!-- 1) MAP FIRST -->
     <section>
       <h2 class="section-title">1) Total Water Consumption by State (Map)</h2>
       <div class="card card--equal">
@@ -58,6 +47,7 @@
         <div id="line" class="viz"></div>
         <p class="caption">
           <strong>What to look for:</strong> steady long-run growth in national production (MLD).
+          Minor year-to-year fluctuations align with infrastructure additions and demand growth.
         </p>
       </div>
     </section>
@@ -139,7 +129,7 @@
   </footer>
 
   <script>
-    // New first chart (map)
+    // Working map first
     vegaEmbed('#map_total', 'map_state_totals.json', { actions: false, renderer: 'canvas' }).catch(console.error);
 
     // Existing charts
