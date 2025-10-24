@@ -1,51 +1,148 @@
-/* ===== Fix row 3–4 alignment ===== */
-
-/* constrain and center the whole 2-up row */
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(520px, 1fr));
-  gap: 24px;
-  align-items: start;         /* align the tops */
-  justify-items: center;      /* center each card within its column */
-  max-width: 1200px;          /* keep the row from stretching too wide */
-  margin-inline: auto;        /* center the row on the page */
+/* ========== Base ========== */
+:root{
+  --bg: #eaf3ff;             /* soft light-blue background */
+  --card: #ffffff;
+  --primary: #1e5adb;        /* blue headings */
+  --accent: #99bdf7;         /* light border */
+  --text: #1f2a3a;
+  --muted: #667389;
+  --shadow: 0 10px 20px rgba(30, 90, 219, 0.08);
+  --radius: 16px;
 }
 
-/* make each card the same visual width and centered */
-.grid-2 .card {
-  width: 100%;
-  max-width: 620px;           /* tweak this if you want them wider/narrower */
+*{ box-sizing: border-box; }
+
+html, body{
+  margin:0;
+  padding:0;
+  color: var(--text);
+  font: 15px/1.55 Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  background: var(--bg);
+}
+
+/* ========== Header ========== */
+.masthead{
+  background: linear-gradient(180deg, #0e3ea9 0%, #164fcc 70%, #1a56d8 100%);
+  color: #fff;
+  padding: 18px 0;
+  box-shadow: var(--shadow);
+}
+
+.wrap{
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0 16px;
 }
 
-/* make the vega container predictable so both charts line up */
-.grid-2 .card .viz {
+.masthead__inner{
+  display:flex; align-items:center; justify-content:space-between;
+}
+
+.masthead__titles h1{
+  margin:0 0 4px 0;
+  font-weight: 700;
+  letter-spacing: .2px;
+  font-size: 20px;
+}
+
+.subtitle{
+  margin:0;
+  color: rgba(255,255,255,.85);
+  font-size: 12.5px;
+}
+
+.badge{
+  background: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.35);
+  color:#fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+/* ========== Sections / Cards ========== */
+.section-title{
+  color: var(--primary);
+  font-size: 18px;
+  margin: 22px 0 10px;
+  text-align: center;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 16px 16px 12px;
+  box-shadow: var(--shadow);
+  margin: 0 auto 18px;
+}
+
+.chart-head{
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom: 8px;
+}
+
+.chart-title{
+  font-weight: 600;
+  color: #2a3c5a;
+  font-size: 14px;
+  margin: 0;
+  text-align:center;
+}
+
+/* Ensures charts actually render (sometimes zero-height containers cause "blank chart") */
+.viz{
   width: 100%;
-  height: 420px;              /* <— same height for both charts */
+  height: 420px;    /* default */
 }
 
-/* keep any long legends/tooltips inside the card */
-.grid-2 .card {
-  overflow: hidden;
+.viz--map{
+  height: 520px;    /* map slightly taller */
 }
 
-/* optional: keep captions the same height so bottoms line up too */
-.grid-2 .card .caption {
-  min-height: 112px;
+/* Grid for the side-by-side charts */
+.grid{
+  display:grid;
+  gap: 18px;
 }
 
-/* tidy Vega’s bound controls so sliders don’t create extra vertical space */
-.vega-bindings {
-  padding: 6px 8px 0;
+.grid-2{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.vega-bindings label { margin-right: 8px; }
-.vega-bindings input[type="range"] { width: 180px; }
 
-/* responsive: stack on narrow screens */
-@media (max-width: 1100px) {
-  .grid-2 {
-    grid-template-columns: 1fr;
-    max-width: 760px;
-  }
-  .grid-2 .card .viz { height: 380px; }
+/* Captions / footer */
+.caption{
+  margin: 8px 4px 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.site-footer{
+  margin-top: 20px;
+  background: #0f2e80;
+  color:#dfe8ff;
+  padding: 16px 0;
+}
+
+.site-footer__inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.site-footer code{
+  color:#fff;
+  background: rgba(255,255,255,.15);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* Small screens */
+@media (max-width: 900px){
+  .grid-2{ grid-template-columns: 1fr; }
+  .viz{ height: 380px; }
+  .viz--map{ height: 460px; }
 }
