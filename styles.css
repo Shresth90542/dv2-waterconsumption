@@ -1,209 +1,82 @@
-/* ===========================
-   Malaysia Water Dashboard UI (Centered)
-   =========================== */
-
-:root {
-  --bg: #e9f3ff;
+:root{
+  --bg: #e9f2fa;           /* softer light blue */
   --card: #ffffff;
-  --ink: #0b1220;
-  --muted: #4c5b73;
-  --accent: #1e40af;
-  --accent-2: #3b82f6;
-  --border: #dbe6ff;
-  --shadow: 0 2px 6px rgba(11, 18, 32, .06), 0 8px 20px rgba(11, 18, 32, .04);
-
-  --radius: 16px;
-  --wrap: 1250px;
-
-  --h1: clamp(30px, 3.2vw, 38px);
-  --h2: clamp(21px, 2.4vw, 26px);
-  --h3: clamp(16px, 1.8vw, 18px);
-  --text: clamp(14px, 1.4vw, 16px);
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --ink: #0e2438;          /* main text */
+  --muted: #5c6b7a;
+  --brand: #0a2e57;        /* deep navy */
+  --brand-2: #2d6cdf;      /* accent blue */
+  --border: #d3e3f2;
+  --shadow: 0 6px 18px rgba(10,46,87,.06);
+  --radius: 14px;
+  --wrap: 1120px;
 }
 
-/* ---- Page ---- */
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: var(--text);
-  line-height: 1.45;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* ⬅️ Center all content */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.45;
 }
 
-/* ---- Masthead ---- */
-.masthead {
-  width: 100%;
-  background: linear-gradient(135deg, #d4e4ff 0%, #c4dcff 40%, #b9d1ff 100%);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  display: flex;
-  justify-content: center; /* ⬅️ Center content inside */
-}
-.masthead__inner {
-  width: 100%;
-  max-width: var(--wrap);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 18px 20px;
-}
-.masthead__titles {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  text-align: center;
-  flex: 1;
-}
-.masthead h1 {
-  margin: 0;
-  font-size: var(--h1);
-  color: #0a1a47;
-  text-align: center;
-}
-.subtitle {
-  margin: 0;
-  color: #1f2d57;
-  opacity: .85;
-  text-align: center;
-}
-.badge {
-  padding: 6px 12px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
-  color: #fff;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 12px;
+.wrap{max-width:var(--wrap); margin:0 auto; padding: 0 18px;}
+.sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+/* Header */
+.masthead{
+  background:linear-gradient(180deg, rgba(10,46,87,.95), rgba(10,46,87,.9));
+  color:#fff;
+  padding:18px 0;
   box-shadow: var(--shadow);
 }
-
-/* ---- Layout ---- */
-.wrap {
-  max-width: var(--wrap);
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* ⬅️ Center inside wrap */
+.masthead__inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.masthead__titles h1{margin:0 0 4px;font-size:24px;font-weight:700}
+.subtitle{margin:0;color:#cfe2ff;font-size:14px}
+.badge{
+  background:#1e3f73;color:#d7e7ff;
+  padding:6px 10px;border-radius:999px;font-weight:600;font-size:12px;
 }
 
-.section-title {
-  font-size: var(--h2);
-  margin: 30px 0 12px;
-  color: #0a1a47;
-  text-align: center; /* ⬅️ Center titles */
-  position: relative;
-}
-.section-title::after {
-  content: "";
-  display: block;
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent-2), var(--accent));
-  margin: 8px auto 0;
-  border-radius: 4px;
-}
-
-/* ---- Cards ---- */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+/* Cards / grid */
+main{padding:22px 0 40px}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
   box-shadow: var(--shadow);
-  padding: 16px 18px;
-  margin: 8px 0 28px;
-  max-width: 1100px;
-  width: 100%;
+  padding:14px 14px 10px;
+  margin: 18px auto 32px;
+}
+.grid{display:grid; gap:22px}
+@media (min-width: 980px){ .grid-2{ grid-template-columns: 1fr 1fr; } }
+
+/* Chart containers (responsive height) */
+.viz{min-height: 360px;}
+.viz--lg{min-height: 520px;}
+.viz--sm{min-height: 320px;}
+
+.caption{
+  margin:10px 6px 0;
+  color:var(--muted);
+  font-size:13px;
 }
 
-/* Equal-height cards */
-.card--equal {
-  display: flex;
-  flex-direction: column;
-}
-.card--equal .viz {
-  flex: 1 1 auto;
-}
-.card--equal .vega-embed {
-  height: auto;
-}
+/* Insights card */
+.insights{background:#f6fbff;border-color:#cfe2ff}
+.insights p{margin:4px 6px 2px}
 
-/* ---- Grid ---- */
-.grid {
-  display: grid;
-  gap: 28px;
-  justify-items: center; /* ⬅️ Center cards inside */
+/* Footer */
+.site-footer{
+  background: var(--brand);
+  color:#cfe2ff;
+  margin-top: 8px;
 }
-.grid-2 {
-  grid-template-columns: 1fr;
+.site-footer__inner{
+  padding:18px 0;
+  display:flex; flex-direction:column; gap:6px;
 }
-@media (min-width: 1000px) {
-  .grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-    justify-content: center;
-  }
-}
+.site-footer code{color:#fff;background:rgba(255,255,255,.08);padding:2px 6px;border-radius:6px}
 
-/* ---- Chart header + captions ---- */
-.chart-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-.chart-title {
-  font-size: var(--h3);
-  font-weight: 700;
-  margin: 0 auto;
-  text-align: center; /* Center chart titles */
-  width: 100%;
-}
-.caption {
-  margin: 10px 2px 0;
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-
-/* ---- Footer ---- */
-.site-footer {
-  margin-top: 50px;
-  background: linear-gradient(135deg, #d4e4ff 0%, #c4dcff 40%, #b9d1ff 100%);
-  border-top: 1px solid var(--border);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.site-footer__inner {
-  max-width: var(--wrap);
-  text-align: center;
-  color: #0a1a47;
-  padding: 20px 0;
-  line-height: 1.6;
-}
-.site-footer code {
-  font-family: var(--mono);
-  background: #eef4ff;
-  padding: 2px 6px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-}
-
-/* ---- Tooltip ---- */
-.vega-tooltip {
-  border-radius: 10px !important;
-  border: 1px solid var(--border) !important;
-  box-shadow: var(--shadow) !important;
-  font-family: var(--sans) !important;
-  font-size: 13px !important;
-}
+/* Subtle hover glow for cards */
+.card:hover{box-shadow: 0 10px 24px rgba(10,46,87,.10)}
