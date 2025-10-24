@@ -1,119 +1,51 @@
-:root {
-  --bg: #eaf2fb;
-  --card: #ffffff;
-  --ink: #0e1726;
-  --muted: #5c6c84;
-  --brand: #1d4ed8;
-  --brand-ghost: #dbe7ff;
-  --radius: 16px;
-  --shadow: 0 10px 24px rgba(16,24,40,.06);
+/* ===== Fix row 3–4 alignment ===== */
+
+/* constrain and center the whole 2-up row */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(520px, 1fr));
+  gap: 24px;
+  align-items: start;         /* align the tops */
+  justify-items: center;      /* center each card within its column */
+  max-width: 1200px;          /* keep the row from stretching too wide */
+  margin-inline: auto;        /* center the row on the page */
 }
 
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-body {
-  margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: var(--ink);
-  background: var(--bg);
-}
-
-.wrap {
-  max-width: 1160px;
+/* make each card the same visual width and centered */
+.grid-2 .card {
+  width: 100%;
+  max-width: 620px;           /* tweak this if you want them wider/narrower */
   margin: 0 auto;
-  padding: 0 20px;
 }
 
-/* Header */
-.masthead {
-  background: linear-gradient(180deg, #d9e6ff, #cfe1ff 60%, transparent);
-  border-bottom: 1px solid #dbe4f4;
-}
-.masthead__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 0 22px;
-}
-.masthead__titles h1 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-}
-.subtitle {
-  margin: .25rem 0 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-.badge {
-  background: var(--brand);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  box-shadow: var(--shadow);
+/* make the vega container predictable so both charts line up */
+.grid-2 .card .viz {
+  width: 100%;
+  height: 420px;              /* <— same height for both charts */
 }
 
-/* Card Layout */
-.card {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px;
-  margin: 22px auto;
+/* keep any long legends/tooltips inside the card */
+.grid-2 .card {
+  overflow: hidden;
 }
 
-/* Proper center alignment for charts 3 & 4 */
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 28px;
+/* optional: keep captions the same height so bottoms line up too */
+.grid-2 .card .caption {
+  min-height: 112px;
 }
 
-.grid .card {
-  flex: 1 1 520px;
-  max-width: 520px;
+/* tidy Vega’s bound controls so sliders don’t create extra vertical space */
+.vega-bindings {
+  padding: 6px 8px 0;
 }
+.vega-bindings label { margin-right: 8px; }
+.vega-bindings input[type="range"] { width: 180px; }
 
-/* Headings */
-.chart-heading {
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--brand);
-  margin-bottom: 10px;
-}
-
-/* Description text */
-.chart-desc {
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--muted);
-  margin-top: 10px;
-  text-align: justify;
-}
-
-/* Chart container sizes */
-.viz { min-height: 340px; }
-.viz--lg { min-height: 420px; }
-.viz--sm { min-height: 320px; }
-
-/* Footer */
-.site-footer {
-  margin: 30px 0 40px;
-  color: var(--muted);
-  font-size: 13px;
-}
-.site-footer__inner {
-  border-top: 1px dashed #c9d6ec;
-  padding-top: 16px;
-}
-code {
-  background: var(--brand-ghost);
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
+/* responsive: stack on narrow screens */
+@media (max-width: 1100px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+    max-width: 760px;
+  }
+  .grid-2 .card .viz { height: 380px; }
 }
