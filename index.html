@@ -5,6 +5,9 @@
   <title>Malaysia Water — Production & Consumption Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
   <!-- Vega libraries -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
@@ -25,94 +28,72 @@
   </header>
 
   <main class="wrap">
-    <!-- 1) MAP FIRST -->
-    <section>
-      <h2 class="section-title">1) Total Water Consumption by State (Map)</h2>
-      <div class="card card--equal">
-        <div class="chart-head"><p class="chart-title">Total Consumption (MLD) — State Choropleth</p></div>
-        <div id="map_total" class="viz"></div>
-        <p class="caption">
-          Darker shades indicate higher total consumption (MLD) aggregated by state. Hover to see exact values.
-        </p>
-      </div>
+
+    <!-- Insights (short, executive-summary style) -->
+    <section class="card insights">
+      <h2 class="sr-only">Insights</h2>
+      <p>
+        Selangor dominates total demand, followed by Johor and Perak. National production rose steadily
+        from 2000–2019, keeping pace with urban growth. Stacked bars show domestic use as the largest share,
+        while non-domestic demand has expanded post-2010. Most states sit close to the production=consumption
+        line, indicating tight balance. Long-run state trends are upward, with Selangor’s growth most pronounced.
+      </p>
     </section>
 
-    <!-- 2) National line -->
-    <section>
-      <h2 class="section-title">2) National Water Production (2000–2019)</h2>
-      <div class="card card--equal">
-        <div class="chart-head">
-          <p class="chart-title">Malaysia — Total Water Production</p>
-        </div>
-        <div id="line" class="viz"></div>
-        <p class="caption">
-          <strong>What to look for:</strong> steady long-run growth in national production (MLD).
-          Minor year-to-year fluctuations align with infrastructure additions and demand growth.
-        </p>
-      </div>
+    <!-- 1) MAP — first, larger card -->
+    <section class="card">
+      <div id="map_totals" class="viz viz--lg"></div>
+      <p class="caption">
+        Darker shades indicate higher total consumption (MLD) by state. Hover for exact values.
+      </p>
+    </section>
+
+    <!-- 2) National Water Production -->
+    <section class="card">
+      <div id="line" class="viz"></div>
+      <p class="caption">
+        National production shows steady long-run growth (2000–2019); year-to-year bumps reflect new capacity and demand.
+      </p>
     </section>
 
     <!-- 3–4) State comparisons -->
-    <section>
-      <h2 class="section-title">3–4) State Comparisons (same year)</h2>
-      <div class="grid grid-2">
-        <div class="card card--equal">
-          <div class="chart-head"><p class="chart-title">Sectoral Water Consumption by State</p></div>
-          <div id="bars" class="viz"></div>
-          <p class="caption">
-            <strong>Interpretation:</strong> stacked bars show each state’s split between
-            <em>Domestic</em> and <em>Non-domestic</em> use. Use the slider to change the year.
-          </p>
-        </div>
-
-        <div class="card card--equal">
-          <div class="chart-head"><p class="chart-title">Production vs Total Consumption</p></div>
-          <div id="scatter" class="viz"></div>
-          <p class="caption">
-            <strong>Interpretation:</strong> each dot is a state in the selected year.
-            Points above the 45° line indicate <em>production &gt; consumption</em> (surplus);
-            below indicates <em>deficit</em>.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5) Area -->
-    <section>
-      <h2 class="section-title">5) Malaysia Consumption by Sector (2003–2022)</h2>
-      <div class="card card--equal">
-        <div class="chart-head"><p class="chart-title">Domestic &amp; Non-domestic Over Time</p></div>
-        <div id="area" class="viz"></div>
+    <section class="grid grid-2">
+      <div class="card">
+        <div id="bars" class="viz viz--sm"></div>
         <p class="caption">
-          <strong>What to look for:</strong> long-run increase in domestic demand with a rising
-          contribution from non-domestic users (industry, commercial, etc.).
+          Split of <em>Domestic</em> vs <em>Non-domestic</em> consumption by state for a selected year (use the slider).
+        </p>
+      </div>
+      <div class="card">
+        <div id="scatter" class="viz viz--sm"></div>
+        <p class="caption">
+          Each dot is a state; points above the 45° line indicate production &gt; consumption (surplus), below indicates deficit.
         </p>
       </div>
     </section>
 
-    <!-- 6) Sparklines -->
-    <section>
-      <h2 class="section-title">6) State Consumption Trends (2003–2022)</h2>
-      <div class="card card--equal">
-        <div class="chart-head"><p class="chart-title">Water Consumption Trend by State</p></div>
-        <div id="sparklines" class="viz"></div>
-        <p class="caption">
-          <strong>How to use:</strong> choose a state from the dropdown inside the chart to see its clean trend line (MLD).
-        </p>
-      </div>
+    <!-- 5) Area (sector over time) -->
+    <section class="card">
+      <div id="area" class="viz"></div>
+      <p class="caption">
+        Domestic remains the majority share; non-domestic grows notably after 2010, mirroring industrial/commercial activity.
+      </p>
     </section>
 
-    <!-- 7) Dumbbell -->
-    <section>
-      <h2 class="section-title">7) Change in Total Consumption — Compare Two Years</h2>
-      <div class="card card--equal">
-        <div class="chart-head"><p class="chart-title">Before–After (Dumbbell)</p></div>
-        <div id="dumbbell" class="viz"></div>
-        <p class="caption">
-          <strong>How to use:</strong> move the sliders to set Year A and Year B.
-          Lines show magnitude &amp; direction of change by state; sorted by largest shift.
-        </p>
-      </div>
+    <!-- 6) State trend (single-state clean line) -->
+    <section class="card">
+      <div id="sparklines" class="viz"></div>
+      <p class="caption">
+        Choose a state from the dropdown inside the chart to view its clean trend line (MLD).
+      </p>
+    </section>
+
+    <!-- 7) Dumbbell change view -->
+    <section class="card">
+      <div id="dumbbell" class="viz viz--sm"></div>
+      <p class="caption">
+        Compare two years with the sliders; lines show magnitude &amp; direction of change by state (sorted by largest shift).
+      </p>
     </section>
   </main>
 
@@ -129,8 +110,8 @@
   </footer>
 
   <script>
-    // Working map first
-    vegaEmbed('#map_total', 'map_state_totals.json', { actions: false, renderer: 'canvas' }).catch(console.error);
+    // New map first (keeps your working spec)
+    vegaEmbed('#map_totals', 'map_totals.json', { actions: false, renderer: 'canvas' }).catch(console.error);
 
     // Existing charts
     vegaEmbed('#line', 'linechart.json', { actions: false, renderer: 'canvas' }).catch(console.error);
