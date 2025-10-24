@@ -1,0 +1,170 @@
+Malaysia Water — Production & Consumption Dashboard
+
+Author: Shresth Sohaney (Student ID: 33806314)
+Campus: Monash University Malaysia
+
+1. Overview
+
+This project presents an interactive data-driven dashboard that visualises Malaysia’s national and state-level water production and consumption trends (2000 – 2022). The goal is to transform tabular datasets into clear, interpretable visual insights about how water is produced, distributed, and used across sectors and regions.
+
+The dashboard uses Vega-Lite to combine multiple coordinated charts, maps, and trend plots, offering both national summaries and regional comparisons. It was developed following the Five Design Sheet (FDS) methodology and guided by Munzner’s What/Why/How framework.
+
+2. Why (Purpose & Need)
+
+Access to clean water is a key sustainability concern under UN SDG 6: Clean Water and Sanitation. In Malaysia, state-level variations in supply and demand are often discussed in text reports, but not easily visualised.
+
+This visualisation addresses the need for:
+
+A comprehensive national overview of production and usage patterns.
+
+Comparative insights into which states are high consumers versus efficient producers.
+
+Understanding sectoral demand balance between domestic and non-domestic users.
+
+Geospatial context showing where demand and supply pressures are concentrated.
+
+The dashboard helps policy analysts, water management authorities, and environmentally conscious citizens explore Malaysia’s water distribution in an intuitive and evidence-based manner.
+
+3. What (Data & Content)
+
+Datasets used:
+
+water_production_2000_2019.csv – National annual production volumes (MLD).
+
+water_consumption.csv – State-level consumption by sector and year.
+
+state_totals.csv – Aggregated total consumption per state (for the choropleth map).
+
+malaysia.geojson – Geospatial boundaries for states.
+
+Visualised attributes:
+
+Temporal: Yearly trends (2000 – 2022).
+
+Categorical: States, sectors (domestic / non-domestic).
+
+Quantitative: Production / consumption in million litres per day (MLD).
+
+4. Who (Target Audience)
+
+Designed for the average Malaysian, especially:
+
+Students and educators interested in sustainability.
+
+Policy and planning staff at national or state water authorities.
+
+Citizens curious about regional water usage patterns.
+
+The dashboard is intentionally presented in clear English, minimal jargon, and high-contrast visuals accessible to general audiences.
+
+5. How (Design & Interactivity)
+5.1 Munzner’s What/Why/How Mapping
+Stage	Description
+What	Quantitative and categorical data on water production, consumption, and geography.
+Why	To explore patterns, compare states, and identify imbalances between supply and demand.
+How	Through interactive encodings (bar, scatter, area, line, and map charts) built in Vega-Lite.
+5.2 Interaction
+
+Dropdown & sliders allow filtering by state and year.
+
+Hover tooltips reveal exact numeric values.
+
+Map colour scale supports intuitive geographic comparison.
+
+Responsive layout adapts to various screen sizes.
+
+5.3 Innovation
+
+While grounded in standard chart idioms, innovation lies in:
+
+Combining spatial and temporal analysis in one cohesive dashboard.
+
+Providing a unified Malaysian context (state map + time trends + sectoral splits).
+
+Delivering a clean, professional layout that mirrors decision-support dashboards used in policy work.
+
+6. Design Rationale
+Layout & Storytelling
+
+Charts are ordered to guide the viewer from a national overview (map + line) to state-level comparisons, and finally to temporal and sectoral trends, following a logical narrative flow: Where → What → Why.
+
+Visual Idioms
+
+Choropleth map: highlights spatial differences in total water use.
+
+Line & area charts: show long-term national and sectoral trends.
+
+Stacked bar chart: compares domestic vs non-domestic usage across states.
+
+Scatter plot: examines production–consumption balance per state.
+
+Interactive sparklines: display state-specific time-series.
+
+Colour & Typography
+
+A consistent blue palette communicates “water” and maintains semantic clarity.
+
+Text uses the system Inter / Segoe UI family for readability.
+
+Emphasis via contrast, alignment, and spacing reinforces hierarchy and narrative.
+
+Data-Ink Ratio & Minimalism
+
+Non-essential decoration is removed. All marks encode meaningful information—supporting Tufte’s data-ink ratio principle.
+
+7. Implementation Summary
+
+Framework: HTML, CSS, and Vega-Lite v5.
+
+Visualisation files:
+
+map_state_totals.json
+
+linechart.json
+
+bars.json
+
+scatter.json
+
+area.json
+
+state_sparklines.json
+
+Styling: styles.css ensures visual consistency and alignment.
+
+Integration: index.html embeds all charts and descriptive text, producing a cohesive, professional dashboard.
+
+8. Key Insights from the Dashboard
+
+Selangor exhibits the highest water consumption, consistent with its population and industrial base.
+
+Perak and Johor are major producers, suggesting surplus capacity relative to use.
+
+The domestic sector remains the dominant consumer nationally.
+
+Urbanisation correlates strongly with increased demand intensity.
+
+Nationwide production rose steadily from 2000 – 2019, indicating successful supply scaling.
+
+9. Design Process & Methodology
+
+Followed the Five Design Sheet (FDS) process:
+
+Brainstorming data focus and user goals.
+
+Sketching alternative layouts and colour schemes.
+
+Selecting final design concept with story flow.
+
+Detailing interaction and annotation structure.
+
+Implementing and iterating based on visual clarity and user feedback.
+
+Applied Munzner’s hierarchical framework for a structured What/Why/How analysis.
+
+Iteratively evaluated balance, alignment, and colour contrast for a high distinction (HD) visual standard.
+
+10. Conclusion
+
+The “Malaysia Water — Production & Consumption Dashboard” converts multiple raw datasets into a coherent story of Malaysia’s water demand and supply system.
+It supports exploration, comparison, and reflection on how demographic, economic, and regional factors shape national water usage—fulfilling the unit’s objectives of insightful, interactive, and well-designed data visualisation.
