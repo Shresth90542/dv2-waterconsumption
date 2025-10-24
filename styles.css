@@ -80,3 +80,20 @@ main{padding:22px 0 40px}
 
 /* Subtle hover glow for cards */
 .card:hover{box-shadow: 0 10px 24px rgba(10,46,87,.10)}
+
+.chart-heading {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brand);
+  margin-bottom: 10px;
+}
+
+.chart-desc {
+  margin: 8px 6px 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+  text-align: justify;
+}
+
