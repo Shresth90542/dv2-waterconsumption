@@ -12,6 +12,16 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Small, centered charts -->
+  <style>
+    .viz { max-width: 900px; height: 340px; margin: 0 auto; }
+    /* Make the map a bit taller than others for readability */
+    #map_total { height: 420px; }
+    /* Keep cards visually consistent even with smaller charts */
+    .card.card--equal { padding-bottom: 8px; }
+    .grid.grid-2 .viz { height: 320px; }
+  </style>
 </head>
 <body>
   <header class="masthead">
@@ -25,8 +35,22 @@
   </header>
 
   <main class="wrap">
+
+    <!-- 1) Map first -->
     <section>
-      <h2 class="section-title">1) National Water Production (2000–2019)</h2>
+      <h2 class="section-title">1) Total Water Consumption by State (Map)</h2>
+      <div class="card card--equal">
+        <div class="chart-head"><p class="chart-title">Total Consumption (MLD) — State Choropleth</p></div>
+        <div id="map_total" class="viz"></div>
+        <p class="caption">
+          Darker shades indicate higher total consumption (MLD) aggregated by state. Hover to see exact values.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2) National line -->
+    <section>
+      <h2 class="section-title">2) National Water Production (2000–2019)</h2>
       <div class="card card--equal">
         <div class="chart-head">
           <p class="chart-title">Malaysia — Total Water Production</p>
@@ -34,13 +58,13 @@
         <div id="line" class="viz"></div>
         <p class="caption">
           <strong>What to look for:</strong> steady long-run growth in national production (MLD).
-          Minor year-to-year fluctuations align with infrastructure additions and demand growth.
         </p>
       </div>
     </section>
 
+    <!-- 3–4) State comparisons -->
     <section>
-      <h2 class="section-title">2–3) State Comparisons (same year)</h2>
+      <h2 class="section-title">3–4) State Comparisons (same year)</h2>
       <div class="grid grid-2">
         <div class="card card--equal">
           <div class="chart-head"><p class="chart-title">Sectoral Water Consumption by State</p></div>
@@ -63,8 +87,9 @@
       </div>
     </section>
 
+    <!-- 5) Area -->
     <section>
-      <h2 class="section-title">4) Malaysia Consumption by Sector (2003–2022)</h2>
+      <h2 class="section-title">5) Malaysia Consumption by Sector (2003–2022)</h2>
       <div class="card card--equal">
         <div class="chart-head"><p class="chart-title">Domestic &amp; Non-domestic Over Time</p></div>
         <div id="area" class="viz"></div>
@@ -75,8 +100,9 @@
       </div>
     </section>
 
+    <!-- 6) Sparklines -->
     <section>
-      <h2 class="section-title">5) State Consumption Trends (2003–2022)</h2>
+      <h2 class="section-title">6) State Consumption Trends (2003–2022)</h2>
       <div class="card card--equal">
         <div class="chart-head"><p class="chart-title">Water Consumption Trend by State</p></div>
         <div id="sparklines" class="viz"></div>
@@ -86,38 +112,15 @@
       </div>
     </section>
 
+    <!-- 7) Dumbbell -->
     <section>
-      <h2 class="section-title">6) Change in Total Consumption — Compare Two Years</h2>
+      <h2 class="section-title">7) Change in Total Consumption — Compare Two Years</h2>
       <div class="card card--equal">
         <div class="chart-head"><p class="chart-title">Before–After (Dumbbell)</p></div>
         <div id="dumbbell" class="viz"></div>
         <p class="caption">
           <strong>How to use:</strong> move the sliders to set Year A and Year B.
           Lines show magnitude &amp; direction of change by state; sorted by largest shift.
-        </p>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">7) Water Production by State (Map)</h2>
-      <div class="card card--equal">
-        <div class="chart-head"><p class="chart-title">Production (MLD) by State</p></div>
-        <div id="map_prod" class="viz"></div>
-        <p class="caption">
-          <strong>Map reading:</strong> darker shades indicate higher production in the selected year.
-          Hover to see the exact values.
-        </p>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">8) Domestic Share of Consumption by State (Map)</h2>
-      <div class="card card--equal">
-        <div class="chart-head"><p class="chart-title">Domestic Share (%) by State</p></div>
-        <div id="map_share" class="viz"></div>
-        <p class="caption">
-          <strong>Map reading:</strong> percentage of each state’s consumption served to households.
-          States with higher domestic share appear darker.
         </p>
       </div>
     </section>
@@ -128,21 +131,24 @@
       <p>
         <strong>Data sources:</strong>
         <code>water_production_2000_2019.csv</code>,
-        <code>water_consumption.csv</code>
+        <code>water_consumption.csv</code>,
+        <code>state_totals.csv</code>
       </p>
       <p>Prepared by <strong>Shresth Sohaney</strong> (Student ID: <strong>33806314</strong>)</p>
     </div>
   </footer>
 
   <script>
+    // New first chart (map)
+    vegaEmbed('#map_total', 'map_state_totals.json', { actions: false, renderer: 'canvas' }).catch(console.error);
+
+    // Existing charts
     vegaEmbed('#line', 'linechart.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#bars', 'bars.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#scatter', 'scatter.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#area', 'area.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#sparklines', 'state_sparklines.json', { actions: false, renderer: 'canvas' }).catch(console.error);
     vegaEmbed('#dumbbell', 'change_dumbbell.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#map_prod', 'map_production.json', { actions: false, renderer: 'canvas' }).catch(console.error);
-    vegaEmbed('#map_share', 'map_domestic_share.json', { actions: false, renderer: 'canvas' }).catch(console.error);
   </script>
 </body>
 </html>
